@@ -1,15 +1,12 @@
 package lw.ssl.analyze.report;
 
 import api.lw.ssl.analyze.*;
-import api.lw.ssl.analyze.enums.HostAssessmentStatus;
-import api.lw.ssl.analyze.enums.Protocol;
-import api.lw.ssl.analyze.enums.WeakKeyDebian;
+import api.lw.ssl.analyze.enums.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +24,8 @@ public class ExcelReportBuilder {
     private final static String EXCEL_TEMPLATE_FILE_PATH = "/templates/report-remplate.xlt";
     private static final String YES = "Yes";
     private static final String NO = "No";
+    private static final String CANT_BE_TESTED = "Can't be tested";
+
     private static final String INSECURE = "Insecure";
 
     public static String ENDPOINTS_NAME = "endpoints";
@@ -179,19 +178,151 @@ public class ExcelReportBuilder {
                                 //Certificate section ending
 
                                 //Configuration section beginning
+
                                     //Protocols beginning
                                     ProtocolContainer protocolContainer = details.getProtocols();
                                     //TLS_1.0
                                     addProtocolInfo(row, 17, protocolContainer, Protocol.TLS_1_0);
+
                                     //TLS_1.1
                                     addProtocolInfo(row, 18, protocolContainer, Protocol.TLS_1_1);
+
                                     //TLS_1.2
                                     addProtocolInfo(row, 19, protocolContainer, Protocol.TLS_1_2);
+
                                     //SSL_2
                                     addProtocolInfo(row, 20, protocolContainer, Protocol.SSL_2);
+
                                     //SSL_3
                                     addProtocolInfo(row, 21, protocolContainer, Protocol.SSL_3);
                                     //Protocols ending
+
+                                    //Protocol Details beginning
+                                        //Renegotation support
+                                        RenegotationSupport renegotationSupport = details.getRenegotationSupport();
+                                        if (renegotationSupport != null) {
+                                            Cell renegotationSupportCell = row.createCell(22);
+                                            renegotationSupportCell.setCellValue(renegotationSupport.getValue());
+                                        }
+
+                                        //Is vulnerable to the BEAST attack
+                                        addYesOrNoCell(row, 23, details.getVulnerableBeast());
+
+                                        //POODLE (SSLv3)
+                                        addYesOrNoCell(row, 24, details.getPoodle());
+
+                                        //POODLE (TLS)
+                                        PoodleTLS poodleTLS = details.getPoodleTLS();
+                                        if (poodleTLS != null) {
+                                            Cell poodleTLScell = row.createCell(25);
+                                            poodleTLScell.setCellValue(poodleTLS.getValue());
+                                        }
+
+                                        //Downgrade attack prevention
+                                        Boolean fallbackScsv = details.getFallbackScsv();
+                                        Cell fallbackScsvCell = row.createCell(26);
+                                        if (fallbackScsv == null) {
+                                            fallbackScsvCell.setCellValue(CANT_BE_TESTED);
+                                        } else {
+                                            if (fallbackScsv) {
+                                                fallbackScsvCell.setCellValue(YES);
+                                            } else {
+                                                fallbackScsvCell.setCellValue(NO);
+                                            }
+                                        }
+
+                                        //SSL/TLS compression
+                                        SSLtlsCompression ssLtlsCompression = details.getSsLtlsCompression();
+                                        if (ssLtlsCompression != null) {
+                                            Cell sslTLScompressionCell = row.createCell(27);
+                                            sslTLScompressionCell.setCellValue(ssLtlsCompression.getValue());
+                                        }
+
+                                        //RC4
+                                        addYesOrNoCell(row, 28, details.getSupportsRc4());
+
+                                        //Heartbeat
+                                        addYesOrNoCell(row, 29, details.getHeartBeat());
+
+                                        //Heartbleed
+                                        addYesOrNoCell(row, 30, details.getHeartBleed());
+
+                                        //OpenSSL CCS vuln. (CVE-2014-0224)
+                                        OpenSSLccs openSSLccs = details.getOpenSSLccs();
+                                        if (openSSLccs != null) {
+                                            Cell openSSLccsCell = row.createCell(31);
+                                            openSSLccsCell.setCellValue(openSSLccs.getValue());
+                                        }
+
+                                        //Forward Secrecy
+                                        ForwardSecrecy forwardSecrecy = details.getForwardSecrecy();
+                                        if (forwardSecrecy != null) {
+                                            Cell forwardSecrecyCell = row.createCell(32);
+                                            forwardSecrecyCell.setCellValue(forwardSecrecy.getValue());
+                                        }
+
+                                        //NPN
+                                        addYesOrNoCell(row, 33, details.getNpn());
+
+                                        //Session resumption (caching)
+                                        SessionResumption sessionResumption = details.getSessionResumption();
+                                        if (sessionResumption != null) {
+                                            Cell sessionResumptionCell = row.createCell(34);
+                                            sessionResumptionCell.setCellValue(sessionResumption.getValue());
+                                        }
+
+                                        //Session resumption (tickets)
+                                        SessionTickets sessionTickets = details.getSessionTickets();
+                                        if(sessionTickets != null) {
+                                            Cell sessionTicketsCell = row.createCell(35);
+                                            sessionTicketsCell.setCellValue(sessionTickets.getValue());
+                                        }
+
+                                        //OCSP stapling
+                                        addYesOrNoCell(row, 36, details.getOcspStapling());
+
+                                        //HSTS Status
+                                        HstsPolicy hstsPolicy = details.getHstsPolicy();
+                                        if (hstsPolicy != null) {
+                                            String hstsStatus = hstsPolicy.getHstsStatus();
+                                            if (StringUtils.isNotBlank(hstsStatus)) {
+                                                Cell hstsStatusCell = row.createCell(37);
+                                                hstsStatusCell.setCellValue(hstsStatus);
+                                            }
+                                        }
+
+                                        //HPKP status
+                                        HpkpPolicy hpkpPolicy = details.getHpkpPolicy();
+                                        if (hpkpPolicy != null) {
+                                            String hpkpStatus = hpkpPolicy.getHpkpStatus();
+                                            if (StringUtils.isNotBlank(hpkpStatus)) {
+                                                Cell hpkpStatusCell = row.createCell(38);
+                                                hpkpStatusCell.setCellValue(hpkpStatus);
+                                            }
+                                        }
+
+                                        //HPKP status
+                                        HpkpPolicy hpkpROPolicy = details.getHpkpROPolicy();
+                                        if (hpkpROPolicy != null) {
+                                            String hpkpROStatus = hpkpROPolicy.getHpkpStatus();
+                                            if (StringUtils.isNotBlank(hpkpROStatus)) {
+                                                Cell hpkpROStatusCell = row.createCell(39);
+                                                hpkpROStatusCell.setCellValue(hpkpROStatus);
+                                            }
+                                        }
+
+                                        //Uses common DH primes
+                                        DhUsesKnownPrimes dhUsesKnownPrimes = details.getDhUsesKnownPrimes();
+                                        if (dhUsesKnownPrimes != null) {
+                                            Cell dhUsesKnownPrimesCell = row.createCell(40);
+                                            dhUsesKnownPrimesCell.setCellValue(dhUsesKnownPrimes.getValue());
+                                        }
+
+                                        //DH public server param (Ys) reuse
+                                        addYesOrNoCell(row, 41, details.getDhYsReuse());
+
+
+                                    //Protocol Details ending
                                 //Configuration section ending
                             }
 
@@ -236,6 +367,15 @@ public class ExcelReportBuilder {
         }
 
         return report;
+    }
+
+    private static void addYesOrNoCell(Row row, int cellNum, Boolean booleanCellVal) {
+        Cell booleanCell = row.createCell(cellNum);
+        if (booleanCellVal != null && booleanCellVal) {
+            booleanCell.setCellValue(YES);
+        } else {
+            booleanCell.setCellValue(NO);
+        }
     }
 
     private static void addProtocolInfo(Row row, int cellNum, ProtocolContainer protocolContainer, Protocol protocol) {

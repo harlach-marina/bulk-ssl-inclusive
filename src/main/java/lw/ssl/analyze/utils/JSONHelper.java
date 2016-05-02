@@ -12,7 +12,7 @@ import java.util.List;
 public class JSONHelper {
 
     public static String getStringIfExists(JSONObject jsonObject, String key) {
-        if (jsonObject.has(key)) {
+        if (jsonObject != null && jsonObject.has(key)) {
             return jsonObject.getString(key);
         }
 
@@ -20,7 +20,7 @@ public class JSONHelper {
     }
 
     public static Long getLongIfExists(JSONObject jsonObject, String key) {
-        if (jsonObject.has(key)) {
+        if (jsonObject != null && jsonObject.has(key)) {
             return jsonObject.getLong(key);
         }
 
@@ -28,7 +28,7 @@ public class JSONHelper {
     }
 
     public static Integer getIntIfExists(JSONObject jsonObject, String key) {
-        if (jsonObject.has(key)) {
+        if (jsonObject != null && jsonObject.has(key)) {
             return jsonObject.getInt(key);
         }
 
@@ -36,7 +36,7 @@ public class JSONHelper {
     }
 
     public static Boolean getBooleanIfExists(JSONObject jsonObject, String key) {
-        if (jsonObject.has(key)) {
+        if (jsonObject != null && jsonObject.has(key)) {
             return jsonObject.getBoolean(key);
         }
 

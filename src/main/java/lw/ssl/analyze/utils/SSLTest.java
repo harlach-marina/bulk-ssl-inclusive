@@ -84,7 +84,15 @@ public class SSLTest {
         return new SSLInfo();
     }
 
-    public static JSONObject getStatistic(final String host, final String port, boolean isNewAssessment) throws IOException {
+    public static JSONObject getStatistic(final String host, final String port, boolean isNewAssessment, Integer attemptCount) throws IOException {
+        if (attemptCount == null) {
+            attemptCount = 0;
+        } else {
+            if (++attemptCount > 60) {
+                return null;
+            }
+        }
+
         InputStream inputAnalysisStream = null;
 
         try {
@@ -113,7 +121,7 @@ public class SSLTest {
 
                 try {
                     Thread.sleep(timerInterval);
-                    return getStatistic(host, port, false);
+                    return getStatistic(host, port, false, attemptCount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

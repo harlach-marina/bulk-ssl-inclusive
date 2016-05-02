@@ -168,7 +168,7 @@ public class FileUploadServlet extends HttpServlet {
 
                     try {
                         amountOfAttempts++;
-                        analysisResponseJSON = SSLTest.getStatistic(webResourceDescription.getHost(), webResourceDescription.getPort(), true);
+                        analysisResponseJSON = SSLTest.getStatistic(webResourceDescription.getHost(), webResourceDescription.getPort(), true, null);
                         wasAssessmentDone = true;
                     } catch (IOException ex) {
                         if (ex.getMessage().startsWith("Server returned HTTP response code: 429")) {
