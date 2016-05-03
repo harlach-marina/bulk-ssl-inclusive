@@ -103,81 +103,84 @@ public class ExcelReportBuilder {
                                 }
 
                                 //Certificate section beginning
-                                    //Subject
-                                    Cell gradeSubjectCell = row.createCell(5);
+                                //Subject
+                                Cell gradeSubjectCell = row.createCell(5);
 
-                                    EndpointDetails details = endpoint.getDetails();
+                                EndpointDetails details = endpoint.getDetails();
 
-                                    if (details != null) {
-                                        Cert cert = details.getCert();
+                                if (details != null) {
+                                    Cert cert = details.getCert();
 
-                                        gradeSubjectCell.setCellValue(cert.getSubject());
+                                    gradeSubjectCell.setCellValue(cert.getSubject());
 
-                                        //Common names
-                                        List<String> commonNames = cert.getCommonNames();
-                                        if (commonNames != null) {
-                                            Cell commonNamesCell = row.createCell(6);
-                                            commonNamesCell.setCellValue(StringUtils.join(commonNames, ", "));
-                                        }
+                                    //Common names
+                                    List<String> commonNames = cert.getCommonNames();
+                                    if (commonNames != null) {
+                                        Cell commonNamesCell = row.createCell(6);
+                                        commonNamesCell.setCellValue(StringUtils.join(commonNames, ", "));
+                                    }
 
-                                        //Alternative names
-                                        List<String> alternativeNames = cert.getAlternativeNames();
-                                        if (alternativeNames != null) {
-                                            Cell alternativeNamesCell = row.createCell(7);
-                                            alternativeNamesCell.setCellValue(StringUtils.join(alternativeNames, ", "));
-                                        }
+                                    //Alternative names
+                                    List<String> alternativeNames = cert.getAlternativeNames();
+                                    if (alternativeNames != null) {
+                                        Cell alternativeNamesCell = row.createCell(7);
+                                        alternativeNamesCell.setCellValue(StringUtils.join(alternativeNames, ", "));
+                                    }
 
-                                        SimpleDateFormat dateFormat = new SimpleDateFormat("d.MM.yyyy");
-                                        //Valid from
-                                        Calendar validFromCalendar = cert.getValidFromDate();
-                                        if (validFromCalendar != null) {
-                                            Cell validFromCell = row.createCell(8);
-                                            validFromCell.setCellValue(dateFormat.format(validFromCalendar.getTime()));
-                                        }
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("d.MM.yyyy");
+                                    //Valid from
+                                    Calendar validFromCalendar = cert.getValidFromDate();
+                                    if (validFromCalendar != null) {
+                                        Cell validFromCell = row.createCell(8);
+                                        validFromCell.setCellValue(dateFormat.format(validFromCalendar.getTime()));
+                                    }
 
-                                        //Valid until
-                                        Calendar validUntilCalendar = cert.getValidUntilDate();
-                                        if (validUntilCalendar != null) {
-                                            Cell validUntilCell = row.createCell(9);
-                                            validUntilCell.setCellValue(dateFormat.format(validUntilCalendar.getTime()));
-                                        }
+                                    //Valid until
+                                    Calendar validUntilCalendar = cert.getValidUntilDate();
+                                    if (validUntilCalendar != null) {
+                                        Cell validUntilCell = row.createCell(9);
+                                        validUntilCell.setCellValue(dateFormat.format(validUntilCalendar.getTime()));
+                                    }
 
-                                        Key key = details.getKey();
+                                    Key key = details.getKey();
 
-                                        //Key
-                                        Cell keyCell = row.createCell(10);
-                                        keyCell.setCellValue(MessageFormat.format("{0} {1}", key.getKey(), key.getKeyStrength()));
+                                    //Key
+                                    Cell keyCell = row.createCell(10);
+                                    keyCell.setCellValue(MessageFormat.format("{0} {1}", key.getKey(), key.getKeyStrength()));
 
-                                        //Weak key (Debian)
-                                        Cell weakKeyCell = row.createCell(11);
-                                        WeakKeyDebian weakKeyDebian = key.getWeakKeyDebian();
-                                        if (weakKeyDebian != null) {
-                                            weakKeyCell.setCellValue(weakKeyDebian.getValue());
-                                        }
+                                    //Weak key (Debian)
+                                    Cell weakKeyCell = row.createCell(11);
+                                    WeakKeyDebian weakKeyDebian = key.getWeakKeyDebian();
+                                    if (weakKeyDebian != null) {
+                                        weakKeyCell.setCellValue(weakKeyDebian.getValue());
+                                    }
 
-                                        //Issuer
-                                        Cell issuerCell = row.createCell(12);
-                                        issuerCell.setCellValue(cert.getIssuer());
+                                    //Issuer
+                                    Cell issuerCell = row.createCell(12);
+                                    issuerCell.setCellValue(cert.getIssuer());
 
-                                        //Signature algorithm
-                                        Cell signatureAlgorithmCell = row.createCell(13);
-                                        signatureAlgorithmCell.setCellValue(cert.getSignatureAlgorithm());
+                                    //Signature algorithm
+                                    Cell signatureAlgorithmCell = row.createCell(13);
+                                    signatureAlgorithmCell.setCellValue(cert.getSignatureAlgorithm());
 
-                                        //Extended Validation
-                                        Cell extendedValidationCell = row.createCell(14);
-                                        extendedValidationCell.setCellValue(cert.getExtendedValidation().getCode());
+                                    //Extended Validation
+                                    Cell extendedValidationCell = row.createCell(14);
+                                    extendedValidationCell.setCellValue(cert.getExtendedValidation().getCode());
 
-                                        //Revocation information
-                                        Cell revocationInformationCell = row.createCell(15);
-                                        revocationInformationCell.setCellValue(cert.getRevocationInfo().getValue());
+                                    //Revocation information
+                                    Cell revocationInformationCell = row.createCell(15);
+                                    revocationInformationCell.setCellValue(cert.getRevocationInfo().getValue());
 
-                                        //Revocation status
+                                    //Revocation status
+                                    RevocationStatus revocationStatus = cert.getRevocationStatus();
+                                    if (revocationStatus != null) {
                                         Cell revocationStatusCell = row.createCell(16);
                                         revocationStatusCell.setCellValue(cert.getRevocationStatus().getName());
                                     }
-                                //Certificate section ending
 
-                                //Configuration section beginning
+                                    //Certificate section ending
+
+                                    //Configuration section beginning
 
                                     //Protocols beginning
                                     ProtocolContainer protocolContainer = details.getProtocols();
@@ -198,135 +201,133 @@ public class ExcelReportBuilder {
                                     //Protocols ending
 
                                     //Protocol Details beginning
-                                        //Renegotation support
-                                        RenegotationSupport renegotationSupport = details.getRenegotationSupport();
-                                        if (renegotationSupport != null) {
-                                            Cell renegotationSupportCell = row.createCell(22);
-                                            renegotationSupportCell.setCellValue(renegotationSupport.getValue());
-                                        }
+                                    //Renegotation support
+                                    RenegotationSupport renegotationSupport = details.getRenegotationSupport();
+                                    if (renegotationSupport != null) {
+                                        Cell renegotationSupportCell = row.createCell(22);
+                                        renegotationSupportCell.setCellValue(renegotationSupport.getValue());
+                                    }
 
-                                        //Is vulnerable to the BEAST attack
-                                        addYesOrNoCell(row, 23, details.getVulnerableBeast());
+                                    //Is vulnerable to the BEAST attack
+                                    addYesOrNoCell(row, 23, details.getVulnerableBeast());
 
-                                        //POODLE (SSLv3)
-                                        addYesOrNoCell(row, 24, details.getPoodle());
+                                    //POODLE (SSLv3)
+                                    addYesOrNoCell(row, 24, details.getPoodle());
 
-                                        //POODLE (TLS)
-                                        PoodleTLS poodleTLS = details.getPoodleTLS();
-                                        if (poodleTLS != null) {
-                                            Cell poodleTLScell = row.createCell(25);
-                                            poodleTLScell.setCellValue(poodleTLS.getValue());
-                                        }
+                                    //POODLE (TLS)
+                                    PoodleTLS poodleTLS = details.getPoodleTLS();
+                                    if (poodleTLS != null) {
+                                        Cell poodleTLScell = row.createCell(25);
+                                        poodleTLScell.setCellValue(poodleTLS.getValue());
+                                    }
 
-                                        //Downgrade attack prevention
-                                        Boolean fallbackScsv = details.getFallbackScsv();
-                                        Cell fallbackScsvCell = row.createCell(26);
-                                        if (fallbackScsv == null) {
-                                            fallbackScsvCell.setCellValue(CANT_BE_TESTED);
+                                    //Downgrade attack prevention
+                                    Boolean fallbackScsv = details.getFallbackScsv();
+                                    Cell fallbackScsvCell = row.createCell(26);
+                                    if (fallbackScsv == null) {
+                                        fallbackScsvCell.setCellValue(CANT_BE_TESTED);
+                                    } else {
+                                        if (fallbackScsv) {
+                                            fallbackScsvCell.setCellValue(YES);
                                         } else {
-                                            if (fallbackScsv) {
-                                                fallbackScsvCell.setCellValue(YES);
-                                            } else {
-                                                fallbackScsvCell.setCellValue(NO);
-                                            }
+                                            fallbackScsvCell.setCellValue(NO);
                                         }
+                                    }
 
-                                        //SSL/TLS compression
-                                        SSLtlsCompression ssLtlsCompression = details.getSsLtlsCompression();
-                                        if (ssLtlsCompression != null) {
-                                            Cell sslTLScompressionCell = row.createCell(27);
-                                            sslTLScompressionCell.setCellValue(ssLtlsCompression.getValue());
+                                    //SSL/TLS compression
+                                    SSLtlsCompression ssLtlsCompression = details.getSsLtlsCompression();
+                                    if (ssLtlsCompression != null) {
+                                        Cell sslTLScompressionCell = row.createCell(27);
+                                        sslTLScompressionCell.setCellValue(ssLtlsCompression.getValue());
+                                    }
+
+                                    //RC4
+                                    addYesOrNoCell(row, 28, details.getSupportsRc4());
+
+                                    //Heartbeat
+                                    addYesOrNoCell(row, 29, details.getHeartBeat());
+
+                                    //Heartbleed
+                                    addYesOrNoCell(row, 30, details.getHeartBleed());
+
+                                    //OpenSSL CCS vuln. (CVE-2014-0224)
+                                    OpenSSLccs openSSLccs = details.getOpenSSLccs();
+                                    if (openSSLccs != null) {
+                                        Cell openSSLccsCell = row.createCell(31);
+                                        openSSLccsCell.setCellValue(openSSLccs.getValue());
+                                    }
+
+                                    //Forward Secrecy
+                                    ForwardSecrecy forwardSecrecy = details.getForwardSecrecy();
+                                    if (forwardSecrecy != null) {
+                                        Cell forwardSecrecyCell = row.createCell(32);
+                                        forwardSecrecyCell.setCellValue(forwardSecrecy.getValue());
+                                    }
+
+                                    //NPN
+                                    addYesOrNoCell(row, 33, details.getNpn());
+
+                                    //Session resumption (caching)
+                                    SessionResumption sessionResumption = details.getSessionResumption();
+                                    if (sessionResumption != null) {
+                                        Cell sessionResumptionCell = row.createCell(34);
+                                        sessionResumptionCell.setCellValue(sessionResumption.getValue());
+                                    }
+
+                                    //Session resumption (tickets)
+                                    SessionTickets sessionTickets = details.getSessionTickets();
+                                    if(sessionTickets != null) {
+                                        Cell sessionTicketsCell = row.createCell(35);
+                                        sessionTicketsCell.setCellValue(sessionTickets.getValue());
+                                    }
+
+                                    //OCSP stapling
+                                    addYesOrNoCell(row, 36, details.getOcspStapling());
+
+                                    //HSTS Status
+                                    HstsPolicy hstsPolicy = details.getHstsPolicy();
+                                    if (hstsPolicy != null) {
+                                        String hstsStatus = hstsPolicy.getHstsStatus();
+                                        if (StringUtils.isNotBlank(hstsStatus)) {
+                                            Cell hstsStatusCell = row.createCell(37);
+                                            hstsStatusCell.setCellValue(hstsStatus);
                                         }
+                                    }
 
-                                        //RC4
-                                        addYesOrNoCell(row, 28, details.getSupportsRc4());
-
-                                        //Heartbeat
-                                        addYesOrNoCell(row, 29, details.getHeartBeat());
-
-                                        //Heartbleed
-                                        addYesOrNoCell(row, 30, details.getHeartBleed());
-
-                                        //OpenSSL CCS vuln. (CVE-2014-0224)
-                                        OpenSSLccs openSSLccs = details.getOpenSSLccs();
-                                        if (openSSLccs != null) {
-                                            Cell openSSLccsCell = row.createCell(31);
-                                            openSSLccsCell.setCellValue(openSSLccs.getValue());
+                                    //HPKP status
+                                    HpkpPolicy hpkpPolicy = details.getHpkpPolicy();
+                                    if (hpkpPolicy != null) {
+                                        String hpkpStatus = hpkpPolicy.getHpkpStatus();
+                                        if (StringUtils.isNotBlank(hpkpStatus)) {
+                                            Cell hpkpStatusCell = row.createCell(38);
+                                            hpkpStatusCell.setCellValue(hpkpStatus);
                                         }
+                                    }
 
-                                        //Forward Secrecy
-                                        ForwardSecrecy forwardSecrecy = details.getForwardSecrecy();
-                                        if (forwardSecrecy != null) {
-                                            Cell forwardSecrecyCell = row.createCell(32);
-                                            forwardSecrecyCell.setCellValue(forwardSecrecy.getValue());
+                                    //HPKP status
+                                    HpkpPolicy hpkpROPolicy = details.getHpkpROPolicy();
+                                    if (hpkpROPolicy != null) {
+                                        String hpkpROStatus = hpkpROPolicy.getHpkpStatus();
+                                        if (StringUtils.isNotBlank(hpkpROStatus)) {
+                                            Cell hpkpROStatusCell = row.createCell(39);
+                                            hpkpROStatusCell.setCellValue(hpkpROStatus);
                                         }
+                                    }
 
-                                        //NPN
-                                        addYesOrNoCell(row, 33, details.getNpn());
+                                    //Uses common DH primes
+                                    DhUsesKnownPrimes dhUsesKnownPrimes = details.getDhUsesKnownPrimes();
+                                    if (dhUsesKnownPrimes != null) {
+                                        Cell dhUsesKnownPrimesCell = row.createCell(40);
+                                        dhUsesKnownPrimesCell.setCellValue(dhUsesKnownPrimes.getValue());
+                                    }
 
-                                        //Session resumption (caching)
-                                        SessionResumption sessionResumption = details.getSessionResumption();
-                                        if (sessionResumption != null) {
-                                            Cell sessionResumptionCell = row.createCell(34);
-                                            sessionResumptionCell.setCellValue(sessionResumption.getValue());
-                                        }
-
-                                        //Session resumption (tickets)
-                                        SessionTickets sessionTickets = details.getSessionTickets();
-                                        if(sessionTickets != null) {
-                                            Cell sessionTicketsCell = row.createCell(35);
-                                            sessionTicketsCell.setCellValue(sessionTickets.getValue());
-                                        }
-
-                                        //OCSP stapling
-                                        addYesOrNoCell(row, 36, details.getOcspStapling());
-
-                                        //HSTS Status
-                                        HstsPolicy hstsPolicy = details.getHstsPolicy();
-                                        if (hstsPolicy != null) {
-                                            String hstsStatus = hstsPolicy.getHstsStatus();
-                                            if (StringUtils.isNotBlank(hstsStatus)) {
-                                                Cell hstsStatusCell = row.createCell(37);
-                                                hstsStatusCell.setCellValue(hstsStatus);
-                                            }
-                                        }
-
-                                        //HPKP status
-                                        HpkpPolicy hpkpPolicy = details.getHpkpPolicy();
-                                        if (hpkpPolicy != null) {
-                                            String hpkpStatus = hpkpPolicy.getHpkpStatus();
-                                            if (StringUtils.isNotBlank(hpkpStatus)) {
-                                                Cell hpkpStatusCell = row.createCell(38);
-                                                hpkpStatusCell.setCellValue(hpkpStatus);
-                                            }
-                                        }
-
-                                        //HPKP status
-                                        HpkpPolicy hpkpROPolicy = details.getHpkpROPolicy();
-                                        if (hpkpROPolicy != null) {
-                                            String hpkpROStatus = hpkpROPolicy.getHpkpStatus();
-                                            if (StringUtils.isNotBlank(hpkpROStatus)) {
-                                                Cell hpkpROStatusCell = row.createCell(39);
-                                                hpkpROStatusCell.setCellValue(hpkpROStatus);
-                                            }
-                                        }
-
-                                        //Uses common DH primes
-                                        DhUsesKnownPrimes dhUsesKnownPrimes = details.getDhUsesKnownPrimes();
-                                        if (dhUsesKnownPrimes != null) {
-                                            Cell dhUsesKnownPrimesCell = row.createCell(40);
-                                            dhUsesKnownPrimesCell.setCellValue(dhUsesKnownPrimes.getValue());
-                                        }
-
-                                        //DH public server param (Ys) reuse
-                                        addYesOrNoCell(row, 41, details.getDhYsReuse());
-
+                                    //DH public server param (Ys) reuse
+                                    addYesOrNoCell(row, 41, details.getDhYsReuse());
 
                                     //Protocol Details ending
-                                //Configuration section ending
+                                    //Configuration section ending
+                                }
                             }
-
-
                         }
                     }
                 } else {
