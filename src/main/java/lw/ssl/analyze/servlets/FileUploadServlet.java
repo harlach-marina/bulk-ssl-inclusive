@@ -1,6 +1,7 @@
 package lw.ssl.analyze.servlets;
 
 import api.lw.ssl.analyze.enums.HostAssessmentStatus;
+import lw.ssl.analyze.pojo.UserData;
 import lw.ssl.analyze.pojo.WebResourceDescription;
 import lw.ssl.analyze.report.ExcelReportBuilder;
 import lw.ssl.analyze.utils.InputStreamConverter;
@@ -33,11 +34,15 @@ public class FileUploadServlet extends HttpServlet {
     public static final String FILE_PART_NAME = "fileCSV";
 
     private static final String WRONG_URLs_LETTER_SUBJECT = "Wrong URLs list";
-    TreeMap<String, WeakReference<Task>> results = new TreeMap<>();
+    Map<UserData, WeakReference<Task>> results = new HashMap<>();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = (String) request.getSession(false).getAttribute("user");
+        String eMail = (String) request.getSession(false).getAttribute("eMail");
+
+        UserData userData = new UserData(userName, eMail);
+
         Task currentTask = results.get(userName) == null ? null : results.get(userName).get();
 
         if(currentTask !=null && currentTask.percent < 100){
@@ -46,10 +51,10 @@ public class FileUploadServlet extends HttpServlet {
 
         Part filePart = request.getPart(FILE_PART_NAME);
         InputStream fileInputStream = filePart.getInputStream();
-        currentTask = new Task(InputStreamConverter.convertToWebResourceDescriptions(fileInputStream));
+        currentTask = new Task(InputStreamConverter.convertToWebResourceDescriptions(fileInputStream), eMail);
         currentTask.start();
 
-        results.put(userName, new WeakReference<Task>(currentTask));
+        results.put(userData, new WeakReference<Task>(currentTask));
 
         request.setAttribute("wrongWebResourceStatusList", new ArrayList<>());
         request.setAttribute("percent", 0);
@@ -61,7 +66,11 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = (String) request.getSession(false).getAttribute("user");
-        Task currentTask = results.get(userName) == null ? null : results.get(userName).get();
+        String eMail = (String) request.getSession(false).getAttribute("eMail");
+
+        UserData userData = new UserData(userName, eMail);
+
+        Task currentTask = results.get(userData) == null ? null : results.get(userData).get();
         if (currentTask == null) {
             request.setAttribute("percent", 0);
             request.setAttribute("currentUrl", "");
@@ -74,13 +83,15 @@ public class FileUploadServlet extends HttpServlet {
     }
 
     class Task extends Thread {
+        private String eMailTo;
         private List<JSONObject> analyzedHosts;
         private List<WebResourceDescription> webResourceDescriptionList;
         private HashMap<VerificationThread, String> currentUrl;
         private int percent;
 
-        public Task(List<WebResourceDescription> webResourceDescriptionlist) {
+        public Task(List<WebResourceDescription> webResourceDescriptionlist, String eMail) {
             this.webResourceDescriptionList = webResourceDescriptionlist;
+            this.eMailTo = eMail;
         }
 
         int analyzedCount;
@@ -130,7 +141,7 @@ public class FileUploadServlet extends HttpServlet {
 
             if (analyzedHosts.size() > 0) {
                 //Create ExcelReport and Email-notification,
-                EmailNotificator.notificate(ExcelReportBuilder.buildReport(analyzedHosts, getServletContext()), WRONG_URLs_LETTER_SUBJECT, getServletContext());
+                EmailNotificator.notificate(ExcelReportBuilder.buildReport(analyzedHosts, getServletContext()), WRONG_URLs_LETTER_SUBJECT, getServletContext(), eMailTo);
             }
 
             percent = 100;
@@ -154,7 +165,7 @@ public class FileUploadServlet extends HttpServlet {
                 boolean wasAssessmentDone = false;
                 int amountOfAttempts = 0;
 
-                while (!wasAssessmentDone && !(amountOfAttempts > 60)) {
+                while (!wasAssessmentDone && !(amountOfAttempts > 80)) {
                     while (sslInfo.getPossibleAssessmentsAmount() == 0) {
                         sslInfo = SSLTest.getCountOfPossibleAssessments();
                         if (sslInfo.getPossibleAssessmentsAmount() == 0) {

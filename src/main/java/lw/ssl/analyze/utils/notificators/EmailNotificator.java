@@ -30,7 +30,8 @@ public class EmailNotificator {
     public static final String RESULTS = "results";
     public static final String PATTERN = "yyyy.MM.dd_HH.mm.ss";
 
-    public static void notificate(Workbook report, String subject, ServletContext servletContext) {
+    public static void notificate(Workbook report, String subject, ServletContext servletContext, String mailTo) {
+
         if (report != null) {
             try {
                 final Properties props = PropertyFilesHelper.getPropertyByPath(EMAIL_PROPERTIES_SERVLET_CONTENT_PATH, servletContext);
@@ -45,13 +46,6 @@ public class EmailNotificator {
 
                     Message msg = new MimeMessage(session);
                     msg.setFrom(new InternetAddress(props.getProperty("mail.from")));
-
-                    String mailToEMails = props.getProperty("mail.to");
-                    String[] eMails = mailToEMails.split(",");
-                    InternetAddress[] internetAddresses = new InternetAddress[eMails.length];
-                    for (int i = 0; i < eMails.length; i++) {
-                        internetAddresses[i] = new InternetAddress(eMails[i].trim());
-                    }
 
                     MimeBodyPart attachmentPart = new MimeBodyPart();
 
@@ -68,7 +62,7 @@ public class EmailNotificator {
                     multipart.addBodyPart(attachmentPart);
                     msg.setContent(multipart);
 
-                    msg.addRecipients(Message.RecipientType.TO, internetAddresses);
+                    msg.addRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
                     if (subject != null && subject != "") {
                         msg.setSubject(subject);
                     }

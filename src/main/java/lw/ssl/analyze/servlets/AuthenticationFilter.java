@@ -29,9 +29,11 @@ public class AuthenticationFilter implements Filter {
         this.context.log("Requested Resource::"+uri);
 
         HttpSession session = req.getSession(false);
-        if(session == null && !(uri.endsWith("html") || uri.endsWith("LoginServlet") || uri.startsWith("/css") || uri.startsWith("/js"))){
+        if((session == null || session.getAttribute("user") == null || session.getAttribute("eMail") == null) &&
+                !(uri.endsWith("login.jsp") || uri.endsWith("LoginServlet/Heroku") || uri.endsWith("LoginServlet/LinkedIn") || uri.endsWith("AuthServlet") ||
+                        uri.endsWith("/auth/heroku") || uri.startsWith("/css") || uri.startsWith("/js") || uri.startsWith("/img"))){
             this.context.log("Unauthorized access request");
-            res.sendRedirect("login.html");
+            res.sendRedirect("/login.jsp");
         }else{
             // pass the request along the filter chain
             chain.doFilter(request, response);

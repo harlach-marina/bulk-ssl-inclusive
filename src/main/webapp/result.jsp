@@ -4,11 +4,19 @@
 <head>
     <title>Analysis</title>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-xs-offset-3 col-xs-6">
+        <div class="row q-header">
+            <div class="col-xs-4">
+                <a href="http://quadriconsulting.com" target="_blank">
+                    <img src="img/logo.jpg" width="270px" alt="Quadri Consulting">
+                </a>
+            </div>
+        </div>
+        <div class="row q-content">
+            <div class="col-xs-offset-4 col-xs-6">
                 <c:if test="${percent == null || percent ==100}"><h1>Analysis finished</h1></c:if>
                 <c:if test="${percent != null && percent < 100}">
                     <div class="row">

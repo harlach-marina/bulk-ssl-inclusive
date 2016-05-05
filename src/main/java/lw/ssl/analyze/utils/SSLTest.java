@@ -79,7 +79,6 @@ public class SSLTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ;
 
         return new SSLInfo();
     }
