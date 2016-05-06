@@ -42,7 +42,7 @@
         </div>
     </c:if>
     <div class="row">
-        <div class="col-xs-offset-4 col-xs-4">
+        <div class="col-xs-offset-2 col-xs-8">
             <%--Add text here--%>
         </div>
     </div>
