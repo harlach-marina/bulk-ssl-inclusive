@@ -41,6 +41,11 @@
             <p class="bg-danger"><c:out value="${param.errorMessage}"/></p>
         </div>
     </c:if>
+    <div class="row">
+        <div class="col-xs-offset-4 col-xs-4">
+            <%--Add text here--%>
+        </div>
+    </div>
 </div>
 </body>
 </html>
