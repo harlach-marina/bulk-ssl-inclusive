@@ -20,8 +20,8 @@
                 <div class="form-inline form-group">
                     <label>Sign in with</label>
                     <select class="form-control" name="authOpts">
-                        <option>Heroku</option>
                         <option>LinkedIn</option>
+                        <option>Heroku</option>
                     </select>
                     <label>account</label>
                 </div>
