@@ -39,7 +39,7 @@ public class EmailNotificator {
                     Session session = Session.getDefaultInstance(props,
                             new javax.mail.Authenticator() {
                                 protected PasswordAuthentication getPasswordAuthentication() {
-                                    return new PasswordAuthentication(props.getProperty("mail.user"), props.getProperty("mail.password"));
+                                    return new PasswordAuthentication(props.getProperty("mail.user"), System.getenv("E_MAIL_PASS_VAR"));
                                 }
                             });
 
