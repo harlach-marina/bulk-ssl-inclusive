@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -155,7 +158,7 @@ public class FileUploadServlet extends HttpServlet {
 
             if (analyzedHosts.size() > 0) {
                 //Create ExcelReport and Email-notification,
-                EmailNotificator.notificate(ExcelReportBuilder.buildReport(analyzedHosts, getServletContext()), WRONG_URLs_LETTER_SUBJECT, getServletContext(), eMailTo);
+                EmailNotificator.notificateWithExcelReport(ExcelReportBuilder.buildReport(analyzedHosts, getServletContext()), WRONG_URLs_LETTER_SUBJECT, getServletContext(), eMailTo);
             }
 
             percent = 100;

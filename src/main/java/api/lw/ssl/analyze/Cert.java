@@ -3,7 +3,6 @@ package api.lw.ssl.analyze;
 import api.lw.ssl.analyze.enums.ExtendedValidation;
 import api.lw.ssl.analyze.enums.RevocationInfo;
 import api.lw.ssl.analyze.enums.RevocationStatus;
-import api.lw.ssl.analyze.enums.WeakKeyDebian;
 import lw.ssl.analyze.utils.JSONHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;

@@ -4,6 +4,7 @@ import api.lw.ssl.analyze.enums.oauth.AuthType;
 import api.lw.ssl.analyze.oauth.HerokuProviderResource;
 import api.lw.ssl.analyze.oauth.LinkedInProviderResource;
 import lw.ssl.analyze.utils.JSONHelper;
+import lw.ssl.analyze.utils.notificators.EmailNotificator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -33,7 +34,6 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.Cookie;
 
 /**
  * Created by a.bukov on 22.04.2016.
@@ -41,6 +41,9 @@ import javax.servlet.http.Cookie;
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet/*"})
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private final static String BULK_SSL_APP_ADMIN_EMAIL = "BULK_SSL_APP_ADMIN_EMAIL";
+    private final static String STATISTIC_MESSAGE_TEXT_TEMPLATE = "User {0} with e-mail {1} entered the application.";
 
     private final static String APP_URL_VAR_NAME = "APP_URL";
     private static final String CALLBACK_CODE = "code";
@@ -131,6 +134,9 @@ public class LoginServlet extends HttpServlet {
                         }
 
                         if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(eMail)) {
+                            String notificationText = MessageFormat.format(STATISTIC_MESSAGE_TEXT_TEMPLATE, userName, eMail);
+                            EmailNotificator.notificateAdminWithMessage(notificationText, notificationText, getServletContext());
+
                             HttpSession session = request.getSession();
                             session.setAttribute("user", userName);
                             session.setAttribute("eMail", eMail);

@@ -2,10 +2,10 @@ package lw.ssl.analyze.servlets;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import java.io.IOException;
-import java.util.Enumeration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * Created by a.bukov on 22.04.2016.
