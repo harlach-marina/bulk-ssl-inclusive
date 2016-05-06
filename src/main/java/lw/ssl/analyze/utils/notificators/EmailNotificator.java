@@ -1,6 +1,7 @@
 package lw.ssl.analyze.utils.notificators;
 
 import lw.ssl.analyze.utils.PropertyFilesHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,7 +33,7 @@ public class EmailNotificator {
 
     public static void notificate(Workbook report, String subject, ServletContext servletContext, String mailTo) {
 
-        if (report != null) {
+        if (report != null && StringUtils.isNotBlank(mailTo)) {
             try {
                 final Properties props = PropertyFilesHelper.getPropertyByPath(EMAIL_PROPERTIES_SERVLET_CONTENT_PATH, servletContext);
 

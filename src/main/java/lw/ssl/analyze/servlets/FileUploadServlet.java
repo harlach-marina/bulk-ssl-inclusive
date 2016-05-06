@@ -7,6 +7,8 @@ import lw.ssl.analyze.report.ExcelReportBuilder;
 import lw.ssl.analyze.utils.InputStreamConverter;
 import lw.ssl.analyze.utils.SSLTest;
 import lw.ssl.analyze.utils.notificators.EmailNotificator;
+import lw.ssl.analyze.utils.validate.PartValidate;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @WebServlet(name = "FileUploadServlet", urlPatterns = {"/uploadCSV"})
-@MultipartConfig
+@MultipartConfig()
 public class FileUploadServlet extends HttpServlet {
     public static final String FILE_PART_NAME = "fileCSV";
 
@@ -45,11 +48,22 @@ public class FileUploadServlet extends HttpServlet {
 
         Task currentTask = results.get(userName) == null ? null : results.get(userName).get();
 
+        Part filePart = request.getPart(FILE_PART_NAME);
+
+        String validateError = PartValidate.isFileValid(filePart);
+        if(StringUtils.isNotBlank(validateError)) {
+            response.setContentType("text/html");
+            StringBuffer redirectPage = new StringBuffer();
+            redirectPage.append("/index.jsp");
+            redirectPage.append("?errorMessage=" + URLEncoder.encode(validateError, "UTF-8"));
+            response.sendRedirect(redirectPage.toString());
+            return;
+        };
+
         if(currentTask !=null && currentTask.percent < 100){
             currentTask.interrupt();
         }
 
-        Part filePart = request.getPart(FILE_PART_NAME);
         InputStream fileInputStream = filePart.getInputStream();
         currentTask = new Task(InputStreamConverter.convertToWebResourceDescriptions(fileInputStream), eMail);
         currentTask.start();

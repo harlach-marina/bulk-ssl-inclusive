@@ -20,6 +20,11 @@
                 </form>
             </div>
         </div>
+        <c:if test="${not empty param.errorMessage}">
+            <div class="row q-content">
+                <p class="bg-danger"><c:out value="${param.errorMessage}"/></p>
+            </div>
+        </c:if>
         <div class="row q-content">
             <div class="col-xs-offset-4 col-xs-8">
                 <h1><a href="uploadCSV">Current task</a></h1><br/><br/>
@@ -29,17 +34,30 @@
                         <label for="fileCSV">File input</label>
                         <input type="file" name="fileCSV" id="fileCSV" accept="text/csv"/>
                     </div>
-                    <button type="submit" class="btn btn-default"
-                            onclick="
-                             this.disabled=true;
-                             document.getElementById('LogoutBtn').disabled = true;
-                             this.form.submit();">
-                        Upload
-                    </button>
+                    <input type="button" class="btn btn-default" value="Upload" onclick="if(validate()) {this.form.submit()}"/>
                 </form>
             </div>
         </div>
     </div>
 
+    <script type="text/javascript">
+        function validate() {
+            var fileMaxSize = 1048576;
+            var isFileSizeValid = true;
+            var files = document.getElementById("fileCSV").files;
+            if (files) {
+                var file = files[0];
+                if (file && file.size && file.size > fileMaxSize) {
+                    isFileSizeValid = false;
+                }
+            }
+            if(isFileSizeValid) {
+                return true;
+            } else {
+                alert("File size shouldn't be more than 1Mb");
+                return false;
+            }
+        }
+    </script>
 </body>
 </html>

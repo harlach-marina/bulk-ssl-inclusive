@@ -16,6 +16,19 @@ import java.util.List;
 public class InputStreamConverter {
     public static final String DEFAULT_TOKENS_SEPARATOR = ",";
 
+    public static int getFileLinesCount(InputStream inputStream) {
+        int count = 0;
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        try {
+            while (br.readLine() != null) {
+                count++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
     public static List<WebResourceDescription> convertToWebResourceDescriptions(InputStream inputStream, String tokensSeparator) {
         List<WebResourceDescription> webResourceDescriptionList = new ArrayList<WebResourceDescription>();
         BufferedReader br = null;
