@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class FileUploadServlet extends HttpServlet {
     public static final String FILE_PART_NAME = "fileCSV";
 
-    private static final String WRONG_URLs_LETTER_SUBJECT = "Wrong URLs list";
+    private static final String WRONG_URLs_LETTER_SUBJECT = "SSL Scan Results";
     TreeMap<String, WeakReference<Task>> results = new TreeMap<>();
 
     @Override
