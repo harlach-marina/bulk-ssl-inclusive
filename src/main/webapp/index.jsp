@@ -26,9 +26,9 @@
             </div>
         </c:if>
         <div class="row q-content">
-            <div class="col-xs-offset-4 col-xs-8">
+            <div class="col-xs-offset-3 col-xs-8">
                 <h1><a href="uploadCSV">Current task</a></h1><br/><br/>
-                <h1>Upload new file</h1>
+                <h1>Upload text file containing<br/> lots of URLs list <small>(with or without https prefix)</small></h1>
                 <form name="fileSendForm" method="POST" action="uploadCSV" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="fileCSV">File input</label>
@@ -36,6 +36,7 @@
                     </div>
                     <input type="button" class="btn btn-default" value="Upload" onclick="if(validate()) {this.form.submit()}"/>
                 </form>
+                The result is in your mail box
             </div>
         </div>
     </div>
