@@ -5,8 +5,13 @@
 }
 
 .q-content {
+    text-align: center;
 }
 
 .header h1 {
 	text-align: center;
+}
+
+input[type=file]{
+    display:initial;
 }
