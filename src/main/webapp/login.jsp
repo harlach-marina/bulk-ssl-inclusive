@@ -43,7 +43,7 @@
         </c:if>
         <div class="row">
             <div class="col-xs-offset-2 col-xs-8">
-                <h1>If you want to test many SSL webservers, you've come to the right place</h1>
+                <h1 align="center">If you want to test many SSL webservers, you've come to the right place</h1>
             </div>
         </div>
     </div>
