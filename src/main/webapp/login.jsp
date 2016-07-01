@@ -48,6 +48,6 @@
             </div>
         </div>
     </div>
-    <p>Powered by SSLLABS</p>
+    <p>&nbsp;&nbsp;&nbsp;<font size="1">Powered by SSLLABS</font></p>
 </body>
 </html>
