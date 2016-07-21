@@ -40,7 +40,7 @@
                         Upload
                     </button>
                 </form>
-                The result is in your mail box
+                The result will shortly be delivered to your mail box
             </div>
         </div>
     </div>
