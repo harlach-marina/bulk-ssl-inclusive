@@ -28,7 +28,7 @@ public class HSTSFilter implements Filter {
         resp.setHeader("Strict-Transport-Security", "max-age=31622400; includeSubDomains; preload");
         resp.setHeader("X-Frame-Options", "DENY");
         resp.setHeader("X-XSS-Protection", "1; mode=block");
-        resp.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';");
+        resp.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src https://maxcdn.bootstrapcdn.com/");
         resp.setHeader("X-Content-Security-Policy", "allow 'self';");
         resp.setHeader("X-Content-Type-Options", "nosniff");
         resp.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate, no-transform, max-age=0");
