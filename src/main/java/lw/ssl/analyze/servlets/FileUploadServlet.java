@@ -1,11 +1,17 @@
 package lw.ssl.analyze.servlets;
 
 import api.lw.ssl.analyze.enums.HostAssessmentStatus;
+import lw.ssl.analyze.pojo.TotalResults;
 import lw.ssl.analyze.pojo.UserData;
 import lw.ssl.analyze.pojo.WebResourceDescription;
+import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
+import lw.ssl.analyze.pojo.ssllabs.SslLabsResults;
+import lw.ssl.analyze.pojo.virustotal.VirusTotalResults;
 import lw.ssl.analyze.report.ExcelReportBuilder;
 import lw.ssl.analyze.utils.InputStreamConverter;
 import lw.ssl.analyze.utils.SSLTest;
+import lw.ssl.analyze.utils.SecurityHeadersUtil;
+import lw.ssl.analyze.utils.VirusTotalUtil;
 import lw.ssl.analyze.utils.notificators.EmailNotificator;
 import lw.ssl.analyze.utils.validate.PartValidate;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 @WebServlet(name = "FileUploadServlet", urlPatterns = {"/uploadCSV"})
 @MultipartConfig()
 public class FileUploadServlet extends HttpServlet {
-    public static final String FILE_PART_NAME = "fileCSV";
+    private static final String FILE_PART_NAME = "fileCSV";
 
     private static final String WRONG_URLs_LETTER_SUBJECT = "SSL Scan Results";
     Map<UserData, WeakReference<Task>> results = new HashMap<>();
@@ -56,10 +62,10 @@ public class FileUploadServlet extends HttpServlet {
         String validateError = PartValidate.isFileValid(filePart);
         if(StringUtils.isNotBlank(validateError)) {
             response.setContentType("text/html");
-            StringBuffer redirectPage = new StringBuffer();
-            redirectPage.append("/index.jsp");
-            redirectPage.append("?errorMessage=" + URLEncoder.encode(validateError, "UTF-8"));
-            response.sendRedirect(redirectPage.toString());
+            String redirectPage = "/index.jsp" +
+                    "?errorMessage=" +
+                    URLEncoder.encode(validateError, "UTF-8");
+            response.sendRedirect(redirectPage);
             return;
         };
 
@@ -99,14 +105,14 @@ public class FileUploadServlet extends HttpServlet {
         request.getRequestDispatcher("/result.jsp").forward(request, response);
     }
 
-    class Task extends Thread {
+    private class Task extends Thread {
         private String eMailTo;
-        private List<JSONObject> analyzedHosts;
+        private List<TotalResults> analyzedHosts;
         private List<WebResourceDescription> webResourceDescriptionList;
         private HashMap<VerificationThread, String> currentUrl;
         private int percent;
 
-        public Task(List<WebResourceDescription> webResourceDescriptionlist, String eMail) {
+        Task(List<WebResourceDescription> webResourceDescriptionlist, String eMail) {
             this.webResourceDescriptionList = webResourceDescriptionlist;
             this.eMailTo = eMail;
         }
@@ -173,8 +179,16 @@ public class FileUploadServlet extends HttpServlet {
 
             @Override
             public void run() {
+
+                String urlToCheck = webResourceDescription.getHost() + (webResourceDescription.getPort() == null ?
+                        "" : ":" + webResourceDescription.getPort());
+
+                //NEW CODE
+                VirusTotalResults virusTotalResults = VirusTotalUtil.call(urlToCheck);
+                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.call(urlToCheck);
+                //-- NEW CODE
                 System.out.println("Analize url:" + webResourceDescription.getHost());
-                currentUrl.put(this,webResourceDescription.getHost() + (webResourceDescription.getPort() == null ? "" : ":" + webResourceDescription.getPort()));
+                currentUrl.put(this, urlToCheck);
 
                 JSONObject analysisResponseJSON = null;
 
@@ -202,7 +216,6 @@ public class FileUploadServlet extends HttpServlet {
                         if (ex.getMessage().startsWith("Server returned HTTP response code: 429")) {
                             System.out.println("Error 429:" + webResourceDescription.getHost());
                             sslInfo = new SSLTest.SSLInfo(0, 0, 1000);
-                            continue;
                         } else {
                             ex.printStackTrace();
                             break;
@@ -219,22 +232,24 @@ public class FileUploadServlet extends HttpServlet {
                 }
 
                 incrementAnalyzedCount();
-                analyzedHosts.add(analysisResponseJSON);
+                TotalResults totalResults = new TotalResults(securityHeadersResults, virusTotalResults,
+                        new SslLabsResults(analysisResponseJSON));
+                analyzedHosts.add(totalResults);
 
                 currentUrl.remove(this);
                 System.out.println("Url:" + webResourceDescription.getHost() + " done");
             }
         }
 
-        public int getPercent() {
+        int getPercent() {
             return percent;
         }
 
-        public synchronized void incrementAnalyzedCount() {
+        synchronized void incrementAnalyzedCount() {
             percent = Math.round( ++analyzedCount * 100 / webResourceDescriptionList.size());
         }
 
-        synchronized public String getCurrentUrl() {
+        synchronized String getCurrentUrl() {
             StringBuilder result = new StringBuilder();
             for (String url : currentUrl.values()){
                 result.append(url).append(", ");

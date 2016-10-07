@@ -1,6 +1,6 @@
 package lw.ssl.analyze.servlets.oauth;
 
-import api.lw.ssl.analyze.enums.oauth.AuthType;
+import api.lw.ssl.analyze.enums.oauthp.AuthType;
 import api.lw.ssl.analyze.oauth.HerokuProviderResource;
 import api.lw.ssl.analyze.oauth.LinkedInProviderResource;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -26,7 +26,6 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AuthType authType = AuthType.getByName(request.getParameter("authOpts"));
-
         if (authType != null) {
             OAuthClientRequest oAuthRequest = null;
             try {
@@ -52,7 +51,8 @@ public class AuthServlet extends HttpServlet {
                             .setScope(LinkedInProviderResource.AUTH_SCOPE)
                             .setState(state)
                             .buildQueryMessage();
-                    response.sendRedirect(oAuthRequest.getLocationUri());
+                    response.sendRedirect("/LoginServlet/Heroku?code=lola");
+     //               response.sendRedirect(oAuthRequest.getLocationUri());
                 } else {
                     request.setAttribute("errorMessage", "Invalid authentication type");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);

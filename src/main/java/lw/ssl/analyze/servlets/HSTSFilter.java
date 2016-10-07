@@ -4,15 +4,9 @@ package lw.ssl.analyze.servlets;
  * Created by a.bukov on 21.07.2016.
  */
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class HSTSFilter implements Filter {
 
@@ -28,7 +22,7 @@ public class HSTSFilter implements Filter {
         resp.setHeader("Strict-Transport-Security", "max-age=31622400; includeSubDomains; preload");
         resp.setHeader("X-Frame-Options", "DENY");
         resp.setHeader("X-XSS-Protection", "1; mode=block");
-        resp.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self' data: maxcdn.bootstrapcdn.com;");
+//        resp.setHeader("Content-Security-Policy", "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; font-src 'self' data: maxcdn.bootstrapcdn.com;");
         resp.setHeader("X-Content-Security-Policy", "allow 'self';");
         resp.setHeader("X-Content-Type-Options", "nosniff");
         resp.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate, no-transform, max-age=0");

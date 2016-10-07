@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze.enums.oauth;
+package api.lw.ssl.analyze.enums.oauthp;
 
 import org.apache.commons.lang3.StringUtils;
 

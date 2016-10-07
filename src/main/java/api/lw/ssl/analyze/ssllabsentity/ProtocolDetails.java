@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze;
+package api.lw.ssl.analyze.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.Protocol;
 
@@ -14,7 +14,7 @@ public class ProtocolDetails {
     private boolean isAvailible;
     private boolean isInsecure;
 
-    public ProtocolDetails(Protocol protocol) {
+    ProtocolDetails(Protocol protocol) {
         this.protocol = protocol;
     }
 

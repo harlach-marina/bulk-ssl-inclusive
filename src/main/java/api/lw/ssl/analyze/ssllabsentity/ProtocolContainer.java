@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze;
+package api.lw.ssl.analyze.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.Protocol;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ProtocolContainer {
     private List<ProtocolDetails> protocolDetailsList;
 
-    public ProtocolContainer() {
+    ProtocolContainer() {
         protocolDetailsList = new ArrayList<>();
         protocolDetailsList.add(new ProtocolDetails(Protocol.TLS_1_0));
         protocolDetailsList.add(new ProtocolDetails(Protocol.TLS_1_1));
@@ -21,7 +21,7 @@ public class ProtocolContainer {
         protocolDetailsList.add(new ProtocolDetails(Protocol.SSL_3));
     }
 
-    public void setProtocolInfoByNameAndVersion(String name, String version, boolean isAvailible, boolean isInsecure) {
+    void setProtocolInfoByNameAndVersion(String name, String version, boolean isAvailible, boolean isInsecure) {
         if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
             for (ProtocolDetails protocolDetails : protocolDetailsList) {
                 if (protocolDetails.getProtocol().idetifyProtocol(name, version)) {

@@ -1,7 +1,8 @@
 package lw.ssl.analyze.report;
 
-import api.lw.ssl.analyze.*;
 import api.lw.ssl.analyze.enums.*;
+import api.lw.ssl.analyze.ssllabsentity.*;
+import lw.ssl.analyze.pojo.TotalResults;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -29,7 +30,7 @@ public class ExcelReportBuilder {
 
     public static String ENDPOINTS_NAME = "endpoints";
 
-    public static Workbook buildReport(List<JSONObject> analyzedHosts, ServletContext servletContext) {
+    public static Workbook buildReport(List<TotalResults> analyzedHosts, ServletContext servletContext) {
         Workbook report = null;
         try {
             POIFSFileSystem fs = new POIFSFileSystem(servletContext.getResourceAsStream(EXCEL_TEMPLATE_FILE_PATH));
@@ -42,7 +43,8 @@ public class ExcelReportBuilder {
             int currentRowUnsuccess = 2;
 
             for (int i = 0; i < analyzedHosts.size(); i++ ) {
-                final JSONObject analyzedHost = analyzedHosts.get(i);
+                //todo: remove this mock or delete whole method
+                final JSONObject analyzedHost = new JSONObject();// analyzedHosts.get(i);
 
                 Host host = new Host(analyzedHost);
 
@@ -108,19 +110,19 @@ public class ExcelReportBuilder {
                                 EndpointDetails details = endpoint.getDetails();
 
                                 if (details != null) {
-                                    Cert cert = details.getCert();
+                                    Certificate certificate = details.getCertificate();
 
-                                    gradeSubjectCell.setCellValue(cert.getSubject());
+                                    gradeSubjectCell.setCellValue(certificate.getSubject());
 
                                     //Common names
-                                    List<String> commonNames = cert.getCommonNames();
+                                    List<String> commonNames = certificate.getCommonNames();
                                     if (commonNames != null) {
                                         Cell commonNamesCell = row.createCell(6);
                                         commonNamesCell.setCellValue(StringUtils.join(commonNames, ", "));
                                     }
 
                                     //Alternative names
-                                    List<String> alternativeNames = cert.getAlternativeNames();
+                                    List<String> alternativeNames = certificate.getAlternativeNames();
                                     if (alternativeNames != null) {
                                         Cell alternativeNamesCell = row.createCell(7);
                                         alternativeNamesCell.setCellValue(StringUtils.join(alternativeNames, ", "));
@@ -128,14 +130,14 @@ public class ExcelReportBuilder {
 
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("d.MM.yyyy");
                                     //Valid from
-                                    Calendar validFromCalendar = cert.getValidFromDate();
+                                    Calendar validFromCalendar = certificate.getValidFromDate();
                                     if (validFromCalendar != null) {
                                         Cell validFromCell = row.createCell(8);
                                         validFromCell.setCellValue(dateFormat.format(validFromCalendar.getTime()));
                                     }
 
                                     //Valid until
-                                    Calendar validUntilCalendar = cert.getValidUntilDate();
+                                    Calendar validUntilCalendar = certificate.getValidUntilDate();
                                     if (validUntilCalendar != null) {
                                         Cell validUntilCell = row.createCell(9);
                                         validUntilCell.setCellValue(dateFormat.format(validUntilCalendar.getTime()));
@@ -156,25 +158,25 @@ public class ExcelReportBuilder {
 
                                     //Issuer
                                     Cell issuerCell = row.createCell(12);
-                                    issuerCell.setCellValue(cert.getIssuer());
+                                    issuerCell.setCellValue(certificate.getIssuer());
 
                                     //Signature algorithm
                                     Cell signatureAlgorithmCell = row.createCell(13);
-                                    signatureAlgorithmCell.setCellValue(cert.getSignatureAlgorithm());
+                                    signatureAlgorithmCell.setCellValue(certificate.getSignatureAlgorithm());
 
                                     //Extended Validation
                                     Cell extendedValidationCell = row.createCell(14);
-                                    extendedValidationCell.setCellValue(cert.getExtendedValidation().getCode());
+                                    extendedValidationCell.setCellValue(certificate.getExtendedValidation().getCode());
 
                                     //Revocation information
                                     Cell revocationInformationCell = row.createCell(15);
-                                    revocationInformationCell.setCellValue(cert.getRevocationInfo().getValue());
+                                    revocationInformationCell.setCellValue(certificate.getRevocationInfo().getValue());
 
                                     //Revocation status
-                                    RevocationStatus revocationStatus = cert.getRevocationStatus();
+                                    RevocationStatus revocationStatus = certificate.getRevocationStatus();
                                     if (revocationStatus != null) {
                                         Cell revocationStatusCell = row.createCell(16);
-                                        revocationStatusCell.setCellValue(cert.getRevocationStatus().getName());
+                                        revocationStatusCell.setCellValue(certificate.getRevocationStatus().getName());
                                     }
 
                                     //Certificate section ending
