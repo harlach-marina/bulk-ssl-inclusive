@@ -9,11 +9,11 @@ import org.json.JSONObject;
 public class HstsPolicy {
     private final static String HSTS_STATUS = "status";
 
+    private String hstsStatus;
+
     HstsPolicy(JSONObject hstsPolicyObject) {
         fillFromJSONObject(hstsPolicyObject);
     }
-
-    private String hstsStatus;
 
     private void fillFromJSONObject(JSONObject hstsPolicyObject) {
         if (hstsPolicyObject != null) {

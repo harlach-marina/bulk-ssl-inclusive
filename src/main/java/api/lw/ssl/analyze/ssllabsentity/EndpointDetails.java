@@ -57,9 +57,6 @@ public class EndpointDetails {
     private DhUsesKnownPrimes dhUsesKnownPrimes;
     private Boolean dhYsReuse;
 
-    public EndpointDetails() {
-    }
-
     EndpointDetails(JSONObject endpoitDetailsJSON) {
         fillFromJSONObject(endpoitDetailsJSON);
     }

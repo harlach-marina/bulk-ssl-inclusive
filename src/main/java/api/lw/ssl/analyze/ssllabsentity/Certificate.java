@@ -28,10 +28,6 @@ public class Certificate {
     private static final String REVOCATION_STATUS = "revocationStatus";
     private static final String REVOCATION_INFO = "revocationInfo";
 
-    Certificate(JSONObject certJsonObject) {
-        fillFromJSONObject(certJsonObject);
-    }
-
     private String subject;
     private List<String> commonNames;
     private List<String> alternativeNames;
@@ -45,46 +41,10 @@ public class Certificate {
     private RevocationInfo revocationInfo;
     private String trusted;
 
-    public String getSubject() {
-        return subject;
+    Certificate(JSONObject certJsonObject) {
+        fillFromJSONObject(certJsonObject);
     }
 
-    public List<String> getCommonNames() {
-        return commonNames;
-    }
-
-    public List<String> getAlternativeNames() {
-        return alternativeNames;
-    }
-
-    public Calendar getValidFromDate() {
-        return validFromDate;
-    }
-
-    public Calendar getValidUntilDate() {
-        return validUntilDate;
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public String getSignatureAlgorithm() {
-        return signatureAlgorithm;
-    }
-
-    public ExtendedValidation getExtendedValidation() {
-        return extendedValidation;
-    }
-
-    public RevocationStatus getRevocationStatus() {
-        return revocationStatus;
-    }
-
-    public RevocationInfo getRevocationInfo() {
-        return revocationInfo;
-    }
-    
     private void fillFromJSONObject(JSONObject certJSONObject) {
         if (certJSONObject != null) {
             String subject = StringUtils.substringBetween(JSONHelper.getStringIfExists(certJSONObject, SUBJECT), "CN=", ",");
@@ -124,5 +84,45 @@ public class Certificate {
             this.revocationStatus = RevocationStatus.getId(JSONHelper.getIntIfExists(certJSONObject, REVOCATION_STATUS));
             this.revocationInfo = (RevocationInfo.getByCode(JSONHelper.getIntIfExists(certJSONObject, REVOCATION_INFO)));
         }
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public List<String> getCommonNames() {
+        return commonNames;
+    }
+
+    public List<String> getAlternativeNames() {
+        return alternativeNames;
+    }
+
+    public Calendar getValidFromDate() {
+        return validFromDate;
+    }
+
+    public Calendar getValidUntilDate() {
+        return validUntilDate;
+    }
+
+    public String getIssuer() {
+        return issuer;
+    }
+
+    public String getSignatureAlgorithm() {
+        return signatureAlgorithm;
+    }
+
+    public ExtendedValidation getExtendedValidation() {
+        return extendedValidation;
+    }
+
+    public RevocationStatus getRevocationStatus() {
+        return revocationStatus;
+    }
+
+    public RevocationInfo getRevocationInfo() {
+        return revocationInfo;
     }
 }

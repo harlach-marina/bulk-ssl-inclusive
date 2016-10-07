@@ -18,8 +18,11 @@ public class Host {
     private HostAssessmentStatus status;
     private String statusMessage;
 
-    public Host(JSONObject jsonObject) {
-        fillFromJSONObject(jsonObject);
+    public Host(String host, String port, String status, String statusMessage) {
+        this.host = host;
+        this.port = port;
+        this.status = HostAssessmentStatus.getByName(status);
+        this.statusMessage = statusMessage;
     }
 
     private void fillFromJSONObject(JSONObject jsonObject) {

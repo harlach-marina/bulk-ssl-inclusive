@@ -17,11 +17,15 @@ public class SslLabsResults {
 
     private String hostName;
     private String port;
+    private String status;
+    private String statusMessage;
     private List<Endpoint> endpoints = new ArrayList<>();
 
     public SslLabsResults(JSONObject serverResponse) {
         hostName = serverResponse.optString("host");
         port = serverResponse.optString("port");
+        status = serverResponse.optString("status");
+        statusMessage = serverResponse.optString("statusMessage");
 
         JSONArray endpoints = serverResponse.optJSONArray("endpoints");
         for (int i = 0; i < endpoints.length(); i++) {
@@ -38,6 +42,14 @@ public class SslLabsResults {
 
     public String getPort() {
         return port;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getStatusMessage() {
+        return statusMessage;
     }
 
     public List<Endpoint> getEndpoints() {
