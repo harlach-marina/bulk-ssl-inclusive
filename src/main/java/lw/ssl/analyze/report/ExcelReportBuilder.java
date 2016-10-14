@@ -1,8 +1,8 @@
 package lw.ssl.analyze.report;
 
 import api.lw.ssl.analyze.enums.*;
-import api.lw.ssl.analyze.ssllabsentity.*;
 import lw.ssl.analyze.pojo.TotalResults;
+import lw.ssl.analyze.pojo.ssllabs.ssllabsentity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;

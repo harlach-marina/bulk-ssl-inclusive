@@ -34,4 +34,10 @@ public class VirusTotalResults {
     public List<VirusTotalScan> getScans() {
         return scans;
     }
+
+    public Long getCleanResultsPercentage(){
+        return scans.stream().filter(s -> Boolean.FALSE.equals(s.getDetected())).count()
+                * 100
+                / scans.size();
+    }
 }

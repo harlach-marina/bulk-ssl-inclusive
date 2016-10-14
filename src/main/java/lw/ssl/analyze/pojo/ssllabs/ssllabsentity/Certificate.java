@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze.ssllabsentity;
+package lw.ssl.analyze.pojo.ssllabs.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.ExtendedValidation;
 import api.lw.ssl.analyze.enums.RevocationInfo;
@@ -27,6 +27,7 @@ public class Certificate {
     private static final String VALIDATION_TYPE = "validationType";
     private static final String REVOCATION_STATUS = "revocationStatus";
     private static final String REVOCATION_INFO = "revocationInfo";
+    private static final String ISSUES = "issues";
 
     private String subject;
     private List<String> commonNames;
@@ -39,7 +40,7 @@ public class Certificate {
     private ExtendedValidation extendedValidation;
     private RevocationStatus revocationStatus;
     private RevocationInfo revocationInfo;
-    private String trusted;
+    private Boolean isValid;
 
     Certificate(JSONObject certJsonObject) {
         fillFromJSONObject(certJsonObject);
@@ -83,6 +84,7 @@ public class Certificate {
             this.extendedValidation = ExtendedValidation.getById(JSONHelper.getStringIfExists(certJSONObject, VALIDATION_TYPE));
             this.revocationStatus = RevocationStatus.getId(JSONHelper.getIntIfExists(certJSONObject, REVOCATION_STATUS));
             this.revocationInfo = (RevocationInfo.getByCode(JSONHelper.getIntIfExists(certJSONObject, REVOCATION_INFO)));
+            isValid = certJSONObject.optInt(ISSUES) == 0;
         }
     }
 
@@ -124,5 +126,9 @@ public class Certificate {
 
     public RevocationInfo getRevocationInfo() {
         return revocationInfo;
+    }
+
+    public Boolean getValid() {
+        return isValid;
     }
 }

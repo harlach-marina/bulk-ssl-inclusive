@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze.ssllabsentity;
+package lw.ssl.analyze.pojo.ssllabs.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.WeakKeyDebian;
 import lw.ssl.analyze.utils.JSONHelper;

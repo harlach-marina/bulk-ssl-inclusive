@@ -1,6 +1,7 @@
 package lw.ssl.analyze.servlets.oauth;
 
 import api.lw.ssl.analyze.enums.oauthp.AuthType;
+import lw.ssl.analyze.report.PdfReportService;
 import lw.ssl.analyze.utils.notificators.EmailNotificator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 
 /**
  * Created by a.bukov on 22.04.2016.
@@ -29,6 +31,7 @@ public class LoginServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
+        PdfReportService.buildReport(new ArrayList<>());
         String[] pathInfo = request.getPathInfo().split("/");
         String loginType = pathInfo[1];
         String errorMessage = null;

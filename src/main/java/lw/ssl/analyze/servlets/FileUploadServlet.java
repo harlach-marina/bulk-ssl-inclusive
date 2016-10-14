@@ -8,6 +8,7 @@ import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
 import lw.ssl.analyze.pojo.ssllabs.SslLabsResults;
 import lw.ssl.analyze.pojo.virustotal.VirusTotalResults;
 import lw.ssl.analyze.report.ExcelReportBuilder;
+import lw.ssl.analyze.report.PdfReportService;
 import lw.ssl.analyze.utils.InputStreamConverter;
 import lw.ssl.analyze.utils.SSLTest;
 import lw.ssl.analyze.utils.SecurityHeadersUtil;
@@ -164,6 +165,7 @@ public class FileUploadServlet extends HttpServlet {
 
             if (analyzedHosts.size() > 0) {
                 //Create ExcelReport and Email-notification,
+                PdfReportService.buildReport(analyzedHosts);
                 EmailNotificator.notificateWithExcelReport(ExcelReportBuilder.buildReport(analyzedHosts, getServletContext()), WRONG_URLs_LETTER_SUBJECT, getServletContext(), eMailTo);
             }
 

@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze.ssllabsentity;
+package lw.ssl.analyze.pojo.ssllabs.ssllabsentity;
 
 import lw.ssl.analyze.utils.JSONHelper;
 import org.json.JSONObject;

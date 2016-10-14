@@ -1,4 +1,4 @@
-package api.lw.ssl.analyze.ssllabsentity;
+package lw.ssl.analyze.pojo.ssllabs.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.Protocol;
 import org.apache.commons.lang3.StringUtils;
@@ -21,21 +21,27 @@ public class ProtocolContainer {
         protocolDetailsList.add(new ProtocolDetails(Protocol.SSL_3));
     }
 
-    void setProtocolInfoByNameAndVersion(String name, String version, boolean isAvailible, boolean isInsecure) {
+    void setProtocolInfoByNameAndVersion(String name, String version, boolean isAvailable, boolean isInsecure) {
         if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
             for (ProtocolDetails protocolDetails : protocolDetailsList) {
-                if (protocolDetails.getProtocol().idetifyProtocol(name, version)) {
-                    protocolDetails.setAvailible(isAvailible);
+                if (protocolDetails.getProtocol().identifyProtocol(name, version)) {
+                    protocolDetails.setAvailible(isAvailable);
                     protocolDetails.setInsecure(isInsecure);
                 }
             }
         }
     }
 
+    public Boolean isProtocolHere(Protocol protocol) {
+        return protocol != null &&
+                protocolDetailsList.stream().filter(p -> protocol.equals(p.getProtocol())
+                        && p.isAvailible()).count() > 0;
+    }
+
     public ProtocolDetails getProtocolDetailByNameAndVersion(String name, String version) {
         if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
             for (ProtocolDetails protocolDetails : protocolDetailsList) {
-                if (protocolDetails.getProtocol().idetifyProtocol(name, version)) {
+                if (protocolDetails.getProtocol().identifyProtocol(name, version)) {
                     return protocolDetails;
                 }
             }

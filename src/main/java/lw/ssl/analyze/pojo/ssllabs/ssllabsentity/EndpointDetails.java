@@ -1,9 +1,12 @@
-package api.lw.ssl.analyze.ssllabsentity;
+package lw.ssl.analyze.pojo.ssllabs.ssllabsentity;
 
 import api.lw.ssl.analyze.enums.*;
 import lw.ssl.analyze.utils.JSONHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zmushko_m on 29.04.2016.
@@ -12,6 +15,7 @@ public class EndpointDetails {
     private static final String KEY = "key";
     private static final String CERT = "cert";
     private static final String PROTOCOLS = "protocols";
+    private static final String SUITES = "suites";
     private static final String RENEGOTATOIN_SUPPORT = "renegSupport";
     private static final String VULNERABLE_BEAST = "vulnBeast";
     private static final String POODLE = "poodle";
@@ -56,9 +60,10 @@ public class EndpointDetails {
     private HpkpPolicy hpkpROPolicy;
     private DhUsesKnownPrimes dhUsesKnownPrimes;
     private Boolean dhYsReuse;
+    private List<Suite> suites = new ArrayList<>();
 
-    EndpointDetails(JSONObject endpoitDetailsJSON) {
-        fillFromJSONObject(endpoitDetailsJSON);
+    EndpointDetails(JSONObject endpointDetailsJSON) {
+        fillFromJSONObject(endpointDetailsJSON);
     }
 
     private void fillFromJSONObject(JSONObject endpointDetailsJSONObject) {
@@ -86,14 +91,28 @@ public class EndpointDetails {
 
                         String name = JSONHelper.getStringIfExists(protocolJSONObject, ProtocolDetails.NAME);
                         String version = JSONHelper.getStringIfExists(protocolJSONObject, ProtocolDetails.VERSION);
-                        boolean isAvailible = true;
+                        boolean isAvailable = true;
                         Integer insecureFlag = JSONHelper.getIntIfExists(protocolJSONObject, ProtocolDetails.INSECURE_FLAG);
                         boolean isInsecure = false;
                         if (insecureFlag != null && insecureFlag == 0) {
                             isInsecure = true;
                         }
 
-                        protocols.setProtocolInfoByNameAndVersion(name, version, isAvailible, isInsecure);
+                        protocols.setProtocolInfoByNameAndVersion(name, version, isAvailable, isInsecure);
+                    }
+                }
+            }
+
+            if (endpointDetailsJSONObject.has(SUITES)) {
+                JSONArray suitesJson = endpointDetailsJSONObject.getJSONObject("suites").getJSONArray("list");
+                if (suitesJson != null) {
+                    for (int suitesPointer = 0; suitesPointer < suitesJson.length(); suitesPointer++) {
+                        JSONObject suitesJSONObject = suitesJson.getJSONObject(suitesPointer);
+
+                        String name = suitesJSONObject.getString("name");
+                        Integer strength = suitesJSONObject.getInt("cipherStrength");
+
+                        suites.add(new Suite(name, strength));
                     }
                 }
             }
@@ -199,6 +218,10 @@ public class EndpointDetails {
 
     public ProtocolContainer getProtocols() {
         return protocols;
+    }
+
+    public List<Suite> getSuites() {
+        return suites;
     }
 
     public RenegotationSupport getRenegotationSupport() {

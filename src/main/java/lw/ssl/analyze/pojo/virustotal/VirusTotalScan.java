@@ -6,7 +6,7 @@ package lw.ssl.analyze.pojo.virustotal;
  * @author p.sinitskiy (adronex303@gmail.com);
  * @since 1.0.
  */
-class VirusTotalScan {
+public class VirusTotalScan {
 
     private String antivirus;
     private Boolean detected;

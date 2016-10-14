@@ -10,6 +10,9 @@ import java.util.List;
  * @since 1.0.
  */
 public class SecurityHeadersResults {
+
+    public static final Integer MAX_RED_HEADERS = 4;
+
     private List<String> greenHeaders = new ArrayList<>();
     private List<String> redHeaders = new ArrayList<>();
 
