@@ -30,7 +30,8 @@ public final class DnsSecAnalyzerUtil {
     }
 
     public static DnsSecAnalyzerResults getStatistics(String urlToCheck) {
-        Document doc = Jsoup.parse(sendRequestForResult(urlToCheck));
+        String urlToSend = urlToCheck.replaceAll("https://", "").replaceAll("http://", "");
+        Document doc = Jsoup.parse(sendRequestForResult(urlToSend));
         Elements elements = doc.select(".T1 > tbody > tr:last-child").select("tr.L0");
         Set<String> redResults = new TreeSet<>();
         Set<String> greenResults = new TreeSet<>();
@@ -45,7 +46,6 @@ public final class DnsSecAnalyzerUtil {
         return new DnsSecAnalyzerResults(redResults, greenResults);
     }
 
-    //todo: trim http://
     private static String sendRequestForResult(String urlToCheck) {
         try {
             String urlToSend = URLEncoder.encode(urlToCheck, "UTF-8");

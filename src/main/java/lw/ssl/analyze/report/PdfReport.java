@@ -1,5 +1,6 @@
 package lw.ssl.analyze.report;
 
+import lw.ssl.analyze.pojo.dnssec.DnsSecAnalyzerResults;
 import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
 import lw.ssl.analyze.pojo.ssllabs.SslLabsResults;
 import lw.ssl.analyze.pojo.tlscheck.TlsCheckResults;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created on 12.10.2016;
@@ -34,33 +36,35 @@ public class PdfReport {
         try {
             Map<String, Integer> summaryEntries = new LinkedHashMap<>();
             summaryEntries.put("Reputation", builder.reputationPercentage);
-            Integer tlsCheckTotalPercentage = (builder.communicationTlsAdvPercentage +
-                    builder.communicationCertOkPercentage +
-                    builder.communicationTlsNegPercentage) / 3;
-            summaryEntries.put("Communication", tlsCheckTotalPercentage);
-            summaryEntries.put("Compliance", builder.isCompliant ? 100 : 15);
+//            Integer tlsCheckTotalPercentage = (builder.communicationTlsAdvPercentage +
+//                    builder.communicationCertOkPercentage +
+//                    builder.communicationTlsNegPercentage) / 3;
+//            summaryEntries.put("Communication", tlsCheckTotalPercentage);
+//            summaryEntries.put("Compliance", builder.isCompliant ? 100 : 15);
             summaryEntries.put("Security (Web)",
                     100 / builder.securityWebTotalBadHeaders * builder.securityWebBadHeaders.size());
-            Integer confidentialityPercentage = ((builder.confidentialityCertificateValidity ? 100 : 0) +
-                    builder.confidentialityProtocolPercentage +
-                    builder.confidentialityKeyPercentage +
-                    builder.confidentialityCipherPercentage) / 4;
-            summaryEntries.put("Confidentiality", confidentialityPercentage);
-            summaryEntries.put("Integrity", builder.isIntegral ? 100 : 15);
+//            Integer confidentialityPercentage = ((builder.confidentialityCertificateValidity ? 100 : 0) +
+//                    builder.confidentialityProtocolPercentage +
+//                    builder.confidentialityKeyPercentage +
+//                    builder.confidentialityCipherPercentage) / 4;
+//            summaryEntries.put("Confidentiality", confidentialityPercentage);
+//            summaryEntries.put("Integrity", builder.isIntegral ? 100 : 15);
+            summaryEntries.put("Security (DNS)", builder.securityDnsPercentage);
             PDPageContentStream content = new ContentBuilder(doc, page)
                     .title(builder.siteUrl)
                     .summaryBar(summaryEntries)
                     .reputation(builder.reputationPercentage)
-                    .communication(builder.communicationTlsAdvPercentage,
-                            builder.communicationCertOkPercentage,
-                            builder.communicationTlsNegPercentage)
-                    .compliance(builder.isCompliant)
+//                    .communication(builder.communicationTlsAdvPercentage,
+//                            builder.communicationCertOkPercentage,
+//                            builder.communicationTlsNegPercentage)
+//                    .compliance(builder.isCompliant)
                     .securityWeb(builder.securityWebBadHeaders, builder.securityWebTotalBadHeaders)
-                    .confidentiality(builder.confidentialityCertificateValidity,
-                            builder.confidentialityProtocolPercentage,
-                            builder.confidentialityKeyPercentage,
-                            builder.confidentialityCipherPercentage)
-                    .integrity(builder.isIntegral)
+//                    .confidentiality(builder.confidentialityCertificateValidity,
+//                            builder.confidentialityProtocolPercentage,
+//                            builder.confidentialityKeyPercentage,
+//                            builder.confidentialityCipherPercentage)
+//                    .integrity(builder.isIntegral)
+                    .securityDns(builder.securityDnsPercentage, builder.dnsSecAnalyzerRedResults)
                     .build();
             content.close();
         } catch (IOException e) {
@@ -84,6 +88,9 @@ public class PdfReport {
 
         private List<String> securityWebBadHeaders;
         private Integer securityWebTotalBadHeaders;
+
+        private Set<String> dnsSecAnalyzerRedResults;
+        private Integer securityDnsPercentage;
 
         private Boolean confidentialityCertificateValidity;
         private Integer confidentialityProtocolPercentage;
@@ -121,6 +128,12 @@ public class PdfReport {
         public PdfReportBuilder securityHeadersResults(SecurityHeadersResults securityHeadersResults) {
             securityWebBadHeaders = securityHeadersResults.getRedHeaders();
             securityWebTotalBadHeaders = SecurityHeadersResults.MAX_RED_HEADERS;
+            return this;
+        }
+
+        public PdfReportBuilder dnsSecAnalyzerResults(DnsSecAnalyzerResults dnsSecAnalyzerResults) {
+            dnsSecAnalyzerRedResults = dnsSecAnalyzerResults.getRedResults();
+            securityDnsPercentage = dnsSecAnalyzerResults.getPercentageOfGreenResults();
             return this;
         }
 
@@ -385,6 +398,23 @@ public class PdfReport {
             String details = isIntegral ? "Your site is using strong cipher" : "Your site is not using strong cipher";
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            return this;
+        }
+
+        private ContentBuilder securityDns(Integer percentage, Set<String> badResults) throws IOException {
+            currentOffsetY -= PARAGRAPH_OFFSET_Y;
+            appendText("Security (DNS)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
+            if (badResults.isEmpty()) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
+                appendText("DNS check didn't detect any problems.", detailsFont, DETAILS_FONT_SIZE,
+                        DETAILS_OFFSET_X, currentOffsetY);
+            }
+            for (String s : badResults) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
+                appendText(s, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
+            }
             return this;
         }
 

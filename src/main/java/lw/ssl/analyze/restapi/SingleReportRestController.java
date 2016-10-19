@@ -1,14 +1,12 @@
 package lw.ssl.analyze.restapi;
 
 
+import lw.ssl.analyze.pojo.dnssec.DnsSecAnalyzerResults;
 import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
-import lw.ssl.analyze.pojo.ssllabs.SslLabsResults;
-import lw.ssl.analyze.pojo.tlscheck.TlsCheckResults;
 import lw.ssl.analyze.pojo.virustotal.VirusTotalResults;
 import lw.ssl.analyze.report.PdfReport;
+import lw.ssl.analyze.utils.external.DnsSecAnalyzerUtil;
 import lw.ssl.analyze.utils.external.SecurityHeadersUtil;
-import lw.ssl.analyze.utils.external.SslLabsUtil;
-import lw.ssl.analyze.utils.external.TlsCheckUtil;
 import lw.ssl.analyze.utils.external.VirusTotalUtil;
 import lw.ssl.analyze.utils.notificators.EmailNotifier;
 import lw.ssl.analyze.utils.notificators.FileExtension;
@@ -36,16 +34,18 @@ public class SingleReportRestController {
     public Response getReport(@QueryParam("email") String email,
                               @QueryParam("url") String url){
         try {
-            SslLabsResults sslLabsResults = SslLabsUtil.getStatistics(url);
+       //     SslLabsResults sslLabsResults = SslLabsUtil.getStatistics(url);
             VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url);
             SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url);
-            TlsCheckResults tlsCheckResults= TlsCheckUtil.getStatistics(email);
+      //      TlsCheckResults tlsCheckResults= TlsCheckUtil.getStatistics(email);
+            DnsSecAnalyzerResults dnsSecAnalyzerResults = DnsSecAnalyzerUtil.getStatistics(url);
 
             PdfReport pdfReport = new PdfReport.PdfReportBuilder(url)
                     .virusTotalResults(virusTotalResults)
                     .securityHeadersResults(securityHeadersResults)
-                    .sslLabsResults(sslLabsResults)
-                    .tlsCheckResults(tlsCheckResults)
+       //             .sslLabsResults(sslLabsResults)
+        //            .tlsCheckResults(tlsCheckResults)
+                    .dnsSecAnalyzerResults(dnsSecAnalyzerResults)
                     .build();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             pdfReport.getDocument().save(byteArrayOutputStream);
