@@ -1,4 +1,4 @@
-package lw.ssl.analyze.utils;
+package lw.ssl.analyze.utils.external;
 
 import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
 import org.apache.http.HttpResponse;
@@ -28,16 +28,18 @@ import java.security.cert.CertificateFactory;
  * @author p.sinitskiy (adronex303@gmail.com);
  * @since 1.0.
  */
-public class SecurityHeadersUtil {
+public final class SecurityHeadersUtil {
 
     private static final String JVM_CERTIFICATES_PASS = "changeit";
     private static final String SITE_URL = "https://securityheaders.io/";
     private static final String CERTIFICATE_NAME = "schd.io";
-    private static final String CERTIFICATE_PATH = "/schd.io.crt"; // src/main/resources/schd.io.crt
+    private static final String CERTIFICATE_PATH = "/schd.io.crt"; // real path: src/main/resources/schd.io.crt
     private static final Long REQUEST_REPEATING_INTERVAL = 1000L;
 
+    private SecurityHeadersUtil() {
+    }
 
-    public static SecurityHeadersResults call(String urlToCheck) {
+    public static SecurityHeadersResults getStatistics(String urlToCheck) {
         importCertificate();
         Document doc = Jsoup.parse(sendRequestForResult(urlToCheck));
         Elements headersTable = doc.select(".pillList");
@@ -50,7 +52,7 @@ public class SecurityHeadersUtil {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return call(urlToCheck);
+            return getStatistics(urlToCheck);
         }
         SecurityHeadersResults results = new SecurityHeadersResults();
         for (Element element : redHeaders) {

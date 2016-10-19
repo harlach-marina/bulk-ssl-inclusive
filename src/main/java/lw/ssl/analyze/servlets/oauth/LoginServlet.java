@@ -2,7 +2,8 @@ package lw.ssl.analyze.servlets.oauth;
 
 import api.lw.ssl.analyze.enums.oauthp.AuthType;
 import lw.ssl.analyze.report.PdfReportService;
-import lw.ssl.analyze.utils.notificators.EmailNotificator;
+import lw.ssl.analyze.utils.external.DnsSecAnalyzerUtil;
+import lw.ssl.analyze.utils.notificators.EmailNotifier;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -44,6 +45,7 @@ public class LoginServlet extends HttpServlet {
             if (authType != null) {
                 try {
                     String callbackCode = request.getParameter(CALLBACK_CODE);
+                    DnsSecAnalyzerUtil.getStatistics("students.bsuir.by");
 
                     if (StringUtils.isNotBlank(callbackCode)) {
                         String userName = "Vasiliy";
@@ -117,7 +119,7 @@ public class LoginServlet extends HttpServlet {
 
                         if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(eMail)) {
                             String notificationText = MessageFormat.format(STATISTIC_MESSAGE_TEXT_TEMPLATE, userName, eMail);
-                            EmailNotificator.notificateAdminWithMessage(notificationText, notificationText, getServletContext());
+                            EmailNotifier.notifyAdminWithMessage(notificationText, notificationText);
 
                             HttpSession session = request.getSession();
                             session.setAttribute("user", userName);

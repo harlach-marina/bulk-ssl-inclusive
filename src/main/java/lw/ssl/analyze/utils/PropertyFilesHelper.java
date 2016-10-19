@@ -1,6 +1,5 @@
 package lw.ssl.analyze.utils;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -10,12 +9,12 @@ import java.util.Properties;
  */
 public class PropertyFilesHelper {
 
-    public static Properties getPropertyByPath(String propertyFilePath, ServletContext servletContext) {
+    public static Properties getPropertyByPath(String propertyFilePath) {
         final Properties props = new Properties();
         InputStream input = null;
 
         try {
-            input = servletContext.getResourceAsStream(propertyFilePath);
+            input = PropertyFilesHelper.class.getResourceAsStream(propertyFilePath);
             props.load(input);
         } catch (IOException e) {
             e.printStackTrace();

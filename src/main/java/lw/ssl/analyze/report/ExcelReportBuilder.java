@@ -1,14 +1,13 @@
 package lw.ssl.analyze.report;
 
 import api.lw.ssl.analyze.enums.*;
-import lw.ssl.analyze.pojo.TotalResults;
+import lw.ssl.analyze.pojo.TotalScanResults;
 import lw.ssl.analyze.pojo.ssllabs.ssllabsentity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +18,7 @@ import java.util.List;
  * Created by zmushko_m on 28.04.2016.
  */
 public class ExcelReportBuilder {
-    private final static String EXCEL_TEMPLATE_FILE_PATH = "/templates/report-remplate.xlt";
+    private final static String EXCEL_TEMPLATE_FILE_PATH = "/report-remplate.xlt";
     private static final String YES = "Yes";
     private static final String NO = "No";
     private static final String CANT_BE_TESTED = "Can't be tested";
@@ -27,10 +26,10 @@ public class ExcelReportBuilder {
     private static final String INSECURE = "Insecure";
     private static final String ENDPOINTS_NAME = "endpoints";
 
-    public static Workbook buildReport(List<TotalResults> analyzedHosts, ServletContext servletContext) {
+    public static Workbook buildReport(List<TotalScanResults> analyzedHosts){
         Workbook report = null;
         try {
-            POIFSFileSystem fs = new POIFSFileSystem(servletContext.getResourceAsStream(EXCEL_TEMPLATE_FILE_PATH));
+            POIFSFileSystem fs = new POIFSFileSystem(ExcelReportBuilder.class.getResourceAsStream(EXCEL_TEMPLATE_FILE_PATH));
             report = new HSSFWorkbook(fs, true);
 
             Sheet sheetSuccess = report.getSheetAt(0);
@@ -39,17 +38,17 @@ public class ExcelReportBuilder {
             int currentRowSuccess = 3;
             int currentRowUnsuccess = 2;
 
-            for (TotalResults totalResults : analyzedHosts) {
+            for (TotalScanResults totalScanResults : analyzedHosts) {
 
-                Host host = new Host(totalResults.getSslLabsResults().getHostName(),
-                        totalResults.getSslLabsResults().getPort(),
-                        totalResults.getSslLabsResults().getStatus(),
-                        totalResults.getSslLabsResults().getStatusMessage());
+                Host host = new Host(totalScanResults.getSslLabsResults().getHostName(),
+                        totalScanResults.getSslLabsResults().getPort(),
+                        totalScanResults.getSslLabsResults().getStatus(),
+                        totalScanResults.getSslLabsResults().getStatusMessage());
 
                 if (HostAssessmentStatus.READY.equals(host.getStatus())) {
                     //Successful assessments
 
-                    for (Endpoint endpoint : totalResults.getSslLabsResults().getEndpoints()) {
+                    for (Endpoint endpoint : totalScanResults.getSslLabsResults().getEndpoints()) {
                         //Every endpoint new row
                         Row row = sheetSuccess.createRow(currentRowSuccess++);
 

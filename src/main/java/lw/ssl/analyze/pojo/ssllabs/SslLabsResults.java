@@ -23,7 +23,7 @@ public class SslLabsResults {
     private String statusMessage;
     private List<Endpoint> endpoints = new ArrayList<>();
 
-    public SslLabsResults(JSONObject serverResponse) {
+    private SslLabsResults(JSONObject serverResponse) {
         hostName = serverResponse.optString("host");
         port = serverResponse.optString("port");
         status = serverResponse.optString("status");
@@ -36,6 +36,19 @@ public class SslLabsResults {
                 this.endpoints.add(new Endpoint((JSONObject)endpoints.get(i)));
             }
         }
+    }
+
+    public static SslLabsResults createFromResponse(JSONObject response) {
+        return new SslLabsResults(response);
+    }
+
+    public static SslLabsResults getErrorResults(String host, String port, String status, String statusMessage) {
+        JSONObject badResults = new JSONObject();
+        badResults.put("host", host);
+        badResults.put("port", port);
+        badResults.put("status", status);
+        badResults.put("statusMessage", statusMessage);
+        return new SslLabsResults(badResults);
     }
 
     public Boolean isTlsInGoodShape() {

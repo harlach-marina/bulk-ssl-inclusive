@@ -13,7 +13,7 @@ public class ResourceContainer {
     private static final String SSL_LABS_INFO_PREFIX = "info";
 
     public static String getSSLLabsAnalysisUrl(String host, String port, boolean isNewAssessment) {
-        StringBuffer sslLabsUrl = new StringBuffer().append(SSL_LABS_URL).append(SSL_LABS_ANALYSIS_PREFIX);
+        StringBuilder sslLabsUrl = new StringBuilder().append(SSL_LABS_URL).append(SSL_LABS_ANALYSIS_PREFIX);
 
         if (StringUtils.isNotBlank(host)) {
             sslLabsUrl.append(MessageFormat.format("&host={0}", host));

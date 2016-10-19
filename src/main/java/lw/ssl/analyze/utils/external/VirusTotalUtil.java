@@ -1,4 +1,4 @@
-package lw.ssl.analyze.utils;
+package lw.ssl.analyze.utils.external;
 
 import lw.ssl.analyze.pojo.virustotal.VirusTotalResults;
 import org.apache.http.HttpResponse;
@@ -17,21 +17,24 @@ import java.net.URLEncoder;
  * @author p.sinitskiy (adronex303@gmail.com);
  * @since 1.0.
  */
-public class VirusTotalUtil {
+public final class VirusTotalUtil {
 
     private static final String API_KEY = "f982a78d18ca41d511662e478ecf2d9f6c7659377e10b796f481afb85de1f7fd";
     private static final String API_URL = "https://www.virustotal.com/vtapi/v2/url/";
     private static final Long REQUEST_REPEATING_INTERVAL = 10000L;
     private static final String SCAN_REPORT_SUCCESSFUL_MESSAGE = "Scan finished, scan information embedded in this object";
 
-    public static VirusTotalResults call(String urlToCheck) {
+    private VirusTotalUtil() {
+    }
+
+    public static VirusTotalResults getStatistics(String urlToCheck) {
         try {
             sendRequestForScan(urlToCheck);
             Thread.sleep(REQUEST_REPEATING_INTERVAL);
             JSONObject scanResults = sendRequestForResults(urlToCheck);
             if (!SCAN_REPORT_SUCCESSFUL_MESSAGE.equals(scanResults.optString("verbose_msg"))) {
                 System.out.println("Virus total error!");
-                return call(urlToCheck);
+                return getStatistics(urlToCheck);
             } else {
                 System.out.println(scanResults);
                 return new VirusTotalResults(scanResults.optJSONObject("scans"));
@@ -57,8 +60,8 @@ public class VirusTotalUtil {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(API_URL + "report?apikey=" + API_KEY +
                 "&resource=" + urlToSend);
-        HttpResponse oresponse = httpclient.execute(httppost);
-        String accessTokenString = EntityUtils.toString(oresponse.getEntity());
+        HttpResponse response = httpclient.execute(httppost);
+        String accessTokenString = EntityUtils.toString(response.getEntity());
         return new JSONObject(accessTokenString);
     }
 }

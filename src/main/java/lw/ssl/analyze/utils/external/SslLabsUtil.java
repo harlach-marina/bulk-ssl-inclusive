@@ -1,6 +1,8 @@
-package lw.ssl.analyze.utils;
+package lw.ssl.analyze.utils.external;
 
 import api.lw.ssl.analyze.enums.HostAssessmentStatus;
+import lw.ssl.analyze.pojo.ssllabs.SslLabsResults;
+import lw.ssl.analyze.utils.ResourceContainer;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
@@ -13,16 +15,19 @@ import java.net.URLConnection;
 /**
  * Created by zmushko_m on 25.04.2016.
  */
-public class SSLTest {
+public final class SslLabsUtil {
     private static final int CONNECT_TIMEOUT_MS = 30 * 1000;
     private static final int CONTENT_READ_TIMEOUT_MS = 30 * 1000;
+
+    private SslLabsUtil() {
+    }
 
     public static class SSLInfo {
         private int maxAssessments;
         private int currentAssessments;
         private int newAssessmentCoolOff;
 
-        public SSLInfo() {
+        SSLInfo() {
         }
 
         public SSLInfo(int maxAssessments, int currentAssessments, int newAssessmentCoolOff) {
@@ -39,29 +44,17 @@ public class SSLTest {
             return maxAssessments;
         }
 
-        public void setMaxAssessments(int maxAssessments) {
-            this.maxAssessments = maxAssessments;
-        }
-
         public int getCurrentAssessments() {
             return currentAssessments;
-        }
-
-        public void setCurrentAssessments(int currentAssessments) {
-            this.currentAssessments = currentAssessments;
         }
 
         public int getNewAssessmentCoolOff() {
             return newAssessmentCoolOff;
         }
-
-        public void setNewAssessmentCoolOff(int newAssessmentCoolOff) {
-            this.newAssessmentCoolOff = newAssessmentCoolOff;
-        }
     }
 
     public static SSLInfo getCountOfPossibleAssessments() {
-        InputStream inputInfoStream = null;
+        InputStream inputInfoStream;
 
         try {
             final URL getStatisticUrl = new URL(ResourceContainer.getSSLLabsInfoUrl());
@@ -74,16 +67,17 @@ public class SSLTest {
             JSONObject infoJSON = new JSONObject(analysisResponseString);
 
             return new SSLInfo(infoJSON.getInt("maxAssessments"), infoJSON.getInt("currentAssessments"), infoJSON.getInt("newAssessmentCoolOff"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return new SSLInfo();
     }
+    public static SslLabsResults getStatistics(final String host) throws IOException {
+        return getStatistics(host, null, true, null);
+    }
 
-    public static JSONObject getStatistic(final String host, final String port, boolean isNewAssessment, Integer attemptCount) throws IOException {
+    public static SslLabsResults getStatistics(final String host, final String port, boolean isNewAssessment, Integer attemptCount) throws IOException {
         if (attemptCount == null) {
             attemptCount = 0;
         } else {
@@ -108,7 +102,7 @@ public class SSLTest {
 
             if (HostAssessmentStatus.READY.getName().equals(currentHostAssessmentStatus) ||
                     HostAssessmentStatus.ERROR.getName().equals(currentHostAssessmentStatus)) {
-                return analysisResponseJSON;
+                return SslLabsResults.createFromResponse(analysisResponseJSON);
             } else {
                 int timerInterval;
 
@@ -120,7 +114,7 @@ public class SSLTest {
 
                 try {
                     Thread.sleep(timerInterval);
-                    return getStatistic(host, port, false, attemptCount);
+                    return getStatistics(host, port, false, attemptCount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

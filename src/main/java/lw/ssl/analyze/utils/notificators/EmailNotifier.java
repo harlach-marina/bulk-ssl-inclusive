@@ -2,14 +2,13 @@ package lw.ssl.analyze.utils.notificators;
 
 import lw.ssl.analyze.utils.PropertyFilesHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.mail.*;
-import javax.mail.internet.*;
-import javax.servlet.ServletContext;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -17,32 +16,35 @@ import java.util.Properties;
 /**
  * Created by zmushko_m on 21.04.2016.
  */
-public class EmailNotificator {
-    public static final String EMAIL_PROPERTIES_SERVLET_CONTENT_PATH = "/WEB-INF/properties/email.properties";
-    public static final String RESULTS = "results";
-    public static final String PATTERN = "yyyy.MM.dd_HH.mm.ss";
+public class EmailNotifier {
+    private static final String EMAIL_PROPERTIES_SERVLET_CONTENT_PATH = "/properties/email.properties";
+    private static final String RESULTS = "results";
+    private static final String PATTERN = "yyyy.MM.dd_HH.mm.ss";
 
-    public static  void notificateWithExcelReport(Workbook report, String subject, ServletContext servletContext, String mailTo) {
-        if (report != null && StringUtils.isNotBlank(mailTo)) {
-            notificate(report, subject, servletContext, mailTo, null, false);
+    public static  void notifyWithAttachment(ByteArrayOutputStream attachments, FileExtension fileExtension,
+                                             String subject, String mailTo) {
+        if (StringUtils.isNotBlank(mailTo)) {
+            notify(subject, mailTo, null, attachments, fileExtension, false);
         } else {
             System.out.println("Excel report wasn't sent - report or receiver is null");
         }
     }
 
-    public static void notificateAdminWithMessage(String message, String subject, ServletContext servletContext) {
+    public static void notifyAdminWithMessage(String message, String subject) {
         if (StringUtils.isNotBlank(message)) {
-            notificate(null, subject, servletContext, null, message, true);
+            notify(subject, null, message, null, null, true);
         } else {
             System.out.println("Message wasn't sent to e-mail - message is null");
         }
     }
 
-    private static void notificate(Workbook report, String subject, ServletContext servletContext, String mailTo, String message, boolean toAdmin) {
+    private static void notify(String subject, String mailTo, String message,
+                               ByteArrayOutputStream attachmentInBytes, FileExtension extension,
+                               boolean toAdmin) {
 
         if (StringUtils.isNotBlank(mailTo) || toAdmin) {
             try {
-                final Properties props = PropertyFilesHelper.getPropertyByPath(EMAIL_PROPERTIES_SERVLET_CONTENT_PATH, servletContext);
+                final Properties props = PropertyFilesHelper.getPropertyByPath(EMAIL_PROPERTIES_SERVLET_CONTENT_PATH);
 
                 if (toAdmin) {
                     mailTo = props.getProperty("mail.admin");
@@ -59,16 +61,17 @@ public class EmailNotificator {
                     Message msg = new MimeMessage(session);
                     msg.setFrom(new InternetAddress(props.getProperty("mail.from")));
 
-                    if (report != null) {
+                    if (attachmentInBytes != null) {
+
+//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                        attachmentInBytes.write(byteArrayOutputStream);
+//                        attachmentInBytes.close();
+
                         MimeBodyPart attachmentPart = new MimeBodyPart();
 
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        report.write(byteArrayOutputStream);
-                        report.close();
-
-                        attachmentPart = new MimeBodyPart();
-                        attachmentPart.setContent(byteArrayOutputStream.toByteArray(), "application/vnd.ms-excel");
-                        attachmentPart.setFileName(RESULTS + "_" + new SimpleDateFormat(PATTERN).format(new Date()) + ".xls");
+                        attachmentPart.setContent(attachmentInBytes.toByteArray(), "application/vnd.ms-excel");
+                        attachmentPart.setFileName(RESULTS + "_" + new SimpleDateFormat(PATTERN).format(new Date()) +
+                                extension.getValue());
                         attachmentPart.setDisposition(MimeBodyPart.ATTACHMENT);
 
                         Multipart multipart = new MimeMultipart();
@@ -88,13 +91,7 @@ public class EmailNotificator {
                     msg.saveChanges();
                     Transport.send(msg);
                 }
-            } catch (AddressException e) {
-                e.printStackTrace();
             } catch (MessagingException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
