@@ -1,27 +1,44 @@
 $(document).ready(function() {
-    var website = '';
+    var trigger = false;
     $('#test button').on('click', function(){
-        website = $('#site-url').val();
-        email = $('#email-input').val();
-        if (checkIfNotEmpty(website) && validateEmail(email)) {
-            $('#test .form-control-feedback-url').addClass('hidden');
-            $('#test .form-control-feedback-email').addClass('hidden');
+        trigger = true;
+        if (formValidation()) {
             sendRequest(website, email);
-        } else if (!checkIfNotEmpty(website) && validateEmail(email)) {
-            $('#test .form-control-feedback-url').removeClass('hidden');
-            $('#test .form-control-feedback-email').addClass('hidden');
-        } else if (checkIfNotEmpty(website) && !validateEmail(email)) {
-            $('#test .form-control-feedback-email').removeClass('hidden');
-            $('#test .form-control-feedback-url').addClass('hidden');
-        } else {
-            $('#test .form-control-feedback-email').removeClass('hidden');
-            $('#test .form-control-feedback-url').removeClass('hidden');
         }
     });
+    $('#site-url, #email-input').on('keyup',function(){
+        if (trigger){
+            formValidation();
+        }
+    })
 });
+function formValidation() {
+    var website = $('#site-url').val();
+    var email = $('#email-input').val();
+    var websiteWarning = $('#test .form-control-feedback-url');
+    var emailWarning = $('#test .form-control-feedback-email');
+
+    if (checkIfNotEmpty(website) && validateEmail(email)) {
+        websiteWarning.addClass('hidden');
+        emailWarning.addClass('hidden');
+        return true;
+    } else if (!checkIfNotEmpty(website) && validateEmail(email)) {
+            websiteWarning.removeClass('hidden');
+            emailWarning.addClass('hidden');
+            return false;
+    } else if (checkIfNotEmpty(website) && !validateEmail(email)) {
+        websiteWarning.addClass('hidden');
+        emailWarning.removeClass('hidden');
+        return false;
+    } else {
+        websiteWarning.removeClass('hidden');
+        emailWarning.removeClass('hidden');
+        return false;
+    }
+
+}
 function checkIfNotEmpty(site) {
     if (site.length != 0) return true;
-    else return false;
 }
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -47,6 +64,27 @@ function sendRequest(site, email) {
         },
         error: function () {
             console.log("error!");
-        },
+        }
     });
 }
+$(".progress div").each(function () {
+    var display = $(this),
+        currentValue = parseInt(display.text()),
+        nextValue = $(this).attr("data-values"),
+        diff = nextValue - currentValue,
+        step = (0 < diff ? 1 : -1);
+    if (nextValue == "0") {
+        $(display).css("padding", "0");
+    } else {
+        $(display).css("color", "transparent").animate({
+            "width": nextValue + "%"
+        }, "slow");
+    }
+
+    for (var i = 0; i < Math.abs(diff); ++i) {
+        setTimeout(function () {
+            currentValue += step
+            display.html(currentValue + "%");
+        }, 20 * i);
+    }
+});

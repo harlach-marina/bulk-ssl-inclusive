@@ -34,7 +34,7 @@ public class AuthenticationFilter implements Filter {
         }
         if((session == null || session.getAttribute("user") == null || session.getAttribute("eMail") == null) &&
                 !(uri.endsWith("login.jsp") || uri.endsWith("LoginServlet/Heroku") || uri.endsWith("LoginServlet/LinkedIn") || uri.endsWith("AuthServlet") ||
-                        uri.endsWith("/auth/heroku") || uri.startsWith("/css") || uri.startsWith("/js") || uri.startsWith("/img"))){
+                        uri.endsWith("/auth/heroku") || uri.startsWith("/css") || uri.startsWith("/fonts") || uri.startsWith("/js") || uri.startsWith("/img"))){
             this.context.log("Unauthorized access request");
             res.sendRedirect("/login.jsp");
         }else{

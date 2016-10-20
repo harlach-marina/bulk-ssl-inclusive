@@ -42,7 +42,7 @@
             <h3>Find out how well your website it protected</h3>
             <div id="test" class="col-md-8 col-md-offset-2">
                 <div class="form-group">
-                    <input id="site-url" class="form-control" type="url" name="site-url" placeholder="Enter your website URL, *" required>
+                    <input id="site-url" class="form-control" type="url" name="site-url" placeholder="Enter website*, started with http:// or https://" required>
                     <div class="hidden form-control-feedback-url">Required field cannot be left blank</div>
                 </div>
                 <div class="form-group">
@@ -54,7 +54,134 @@
         </article>
     </div>
 </section>
-<footer id="section03">
+<section id="section03">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Get a detailed report about your digital business</h2>
+                <h4>Digital Security Scanner Measurement</h4>
+                <img class="img-responsive" src="img/chart.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Reputation</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger" data-values="20">0</div>
+                    </div>
+                    <b>Your reputation is under threat.</b>
+                    <p>Search engines such as Google may notify your users to avoid using your site because it contains malware or other threats.</p>
+                </div>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Communication</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" data-values="90">0</div>
+                    </div>
+                    <b>TLS Adv</b>
+                    <p></p>
+                </div>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Compliance</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                    </div>
+                    <b>Your reputation is under threat. Search engines such as Google </b>
+                </div>
+            </div>
+            <div id="pbar-security" class="col-md-10 col-md-offset-1">
+                <h2>Security (Web)</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" data-values="40">0</div>
+                    </div>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
+                    <p>XXX</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
+                    <p>XXX</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
+                    <p>XXX</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
+                    <p>XXX</p>
+                </div>
+            </div>
+            <div id="pbar-confidentiality" class="col-md-10 col-md-offset-1">
+                <h2>Confidentiality</h2>
+                <div class="col-md-2">
+                    Certificate
+                </div>
+                <div class="col-md-10">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    Protocol Support
+                </div>
+                <div class="col-md-10">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" data-values="40">0</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    Key Exchange
+                </div>
+                <div class="col-md-10">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" data-values="80">0</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    Chipher Strength
+                </div>
+                <div class="col-md-10">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" data-values="90">0</div>
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-offset-2">
+                    <p>Your site uses expired or not trusted certificate.</p>
+                    <p>Your site support old or nonsecure protocols.</p>
+                </div>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Integrity</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                    </div>
+                    <p>Your reputation is under threat. Search engines such as Google </p>
+                </div>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Availability</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <p>Your site is not using strong cipher</p>
+                </div>
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+                <h2>Security (DNS)</h2>
+                <div class="col-md-10 col-md-offset-2">
+                    <p>DNSSEC records prevent attackers from falsifying DNS records that ensure the integrity of domain</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="section04">
+    <div class="container">
+        <article class="row">
+            <div class="col-xs-4 col-xs-offset-4 col-md-2 col-md-offset-5">
+                <a class="btn btn-transparent" href="#">Test Now</a>
+            </div>
+        </article>
+    </div>
+</section>
+<footer id="section05">
     <div class="container">
         <div class="row">
             <nav class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-0 col-md-4 col-md-offset-5 col-md-push-3">
