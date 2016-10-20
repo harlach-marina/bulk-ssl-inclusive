@@ -16,6 +16,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 
 /**
@@ -28,14 +30,19 @@ import java.util.Date;
 public class SingleReportRestController {
 
     private static final String REPORT_SUBJECT = "Analysis results.";
-    private static final String SUCCESS_MESSAGE = "Report will be sent to your email";
+  //  private static final String SUCCESS_MESSAGE = "Report will be sent to your email";
 
     @GET
     public Response getReport(@QueryParam("email") String email,
-                              @QueryParam("username") String username,
                               @QueryParam("url") String url){
-        startThreads(email, url);
-        return Response.status(200).entity(SUCCESS_MESSAGE).build();
+        try {
+            startThreads(URLDecoder.decode(email, "UTF-8"),
+                    URLDecoder.decode(url, "UTF-8"));
+            return Response.status(200).build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return Response.status(400).build();
     }
 
     private void startThreads(String email, String url) {
