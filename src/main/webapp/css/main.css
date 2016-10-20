@@ -20,13 +20,10 @@ button {
 	background: url('../img/header.png') scroll center no-repeat;
 	color: #fff;
 	min-height:580px;
-	height: calc(100vh - 170px);
+	height: calc(100vh - 80px);
 	background-size: cover;
 }
-#section02 article {
-	padding-top: 8%;
-	font-family: 'Bitter', serif;
-}
+
 #section02 article hr {
 	background-color: #fff;
 	width: 10%;
@@ -34,8 +31,21 @@ button {
 #section02 article h3 {
 	padding-top: 5%;
 }
-#test {
+#test, #section03 {
 	font-family: 'Lato', sans-serif;
+}
+#section02 article{
+	padding-top: 8%;
+	font-family: 'Bitter', serif;
+}
+#section03 h2 {
+	font-family: 'Bitter', serif;
+}
+#section03 h4 {
+	font-weight: bold;
+}
+#section03 {
+	padding-bottom: 60px;
 }
 #test input.form-control {
 	width: 300px;
@@ -49,33 +59,44 @@ button {
 	text-align: left;
 	margin: auto;
 }
-#section03 {
+#section04 {
+	background-color: #01397c;
+	color: #fff;
+}
+#section04 .row>div {
+	height: 120px;
+	text-align: center;
+}
+#section04 .btn-transparent {
+	margin-top: 40px;
+}
+#section05 {
 	background-color: #222;
 	color: #fff;
 	min-height: 40px;
 	height: auto;
 	text-align: center;
 }
-#section03 .left-column {
+#section05 .left-column {
 	padding: 15px 10px; 
 }
-#section03 nav {
+#section05 nav {
 	overflow: auto;
 }
-#section03 nav ul {
+#section05 nav ul {
 	list-style: none;
 	margin: 0;
 }
-#section03 nav li{
+#section05 nav li{
 	float: left;
 	padding: 15px 10px;
 }
-#section03 li a{
+#section05 li a{
 	color: #396888;
 	text-decoration: underline;
 }
-#section03 li a:active,
-#section03 li a:hover {
+#section05 li a:active,
+#section05 li a:hover {
 	color: #fff;
 }
 
@@ -116,6 +137,29 @@ button {
   vertical-align: middle;
 }
 
+.progress {
+	border-radius: 0;
+}
+.progress-bar-danger {
+	background-color: #f23e53;
+}
+.progress-bar-info {
+	background-color: #ffe617;
+}
+.progress-bar-warning{
+	background-color: #ffa518;
+}
+.progress-bar-success {
+	background-color: #4dba05;
+}
+#pbar-security b{
+	color: #f23e53;
+	font-weight: bold;
+}
+#pbar-confidentiality .col-md-2 {
+	font-weight: bold;
+	padding-right: 0;
+}
 .btn-transparent {
 	background-color: transparent;
 	border: 1px solid #fff;
