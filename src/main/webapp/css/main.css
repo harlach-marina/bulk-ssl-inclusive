@@ -152,7 +152,8 @@ button {
 .progress-bar-success {
 	background-color: #4dba05;
 }
-#pbar-security b{
+#pbar-security b,
+#pbar-communication b{
 	color: #f23e53;
 	font-weight: bold;
 }

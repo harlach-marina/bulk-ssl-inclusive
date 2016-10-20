@@ -74,14 +74,19 @@
                     <p>Search engines such as Google may notify your users to avoid using your site because it contains malware or other threats.</p>
                 </div>
             </div>
-            <div class="col-md-10 col-md-offset-1">
+            <div id="pbar-communication" class="col-md-10 col-md-offset-1">
                 <h2>Communication</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-success" data-values="90">0</div>
                     </div>
-                    <b>TLS Adv</b>
-                    <p></p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  TLS Adv</b>
+                    <p>Without TLS,  your data in motion such as passwords, emails, VoIP or credit card information is at risk of being
+                        sniffed and stolen.</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  Cert OK</b>
+                    <p>An expired certificate means there is a risk of Man in the middle attack, because it can no longer be trusted.</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  TLS Neg</b>
+                    <p>Checks to ensure Email transmission is encrypted and secure from  eavesdroppers.</p>
                 </div>
             </div>
             <div class="col-md-10 col-md-offset-1">
@@ -90,7 +95,7 @@
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="10">0</div>
                     </div>
-                    <b>Your reputation is under threat. Search engines such as Google </b>
+                    <b>For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. Reconfigure or upgrade to TLS 1.2.</b>
                 </div>
             </div>
             <div id="pbar-security" class="col-md-10 col-md-offset-1">
@@ -99,45 +104,37 @@
                     <div class="progress">
                         <div class="progress-bar progress-bar-info" data-values="40">0</div>
                     </div>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
-                    <p>XXX</p>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
-                    <p>XXX</p>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
-                    <p>XXX</p>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>Your reputation is under threat. Search engines such as Google </b>
-                    <p>XXX</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  Content-Security-Policy</b>
+                    <p>Your site is not protect from XSS attacks. You need to prevent user  browser from loading malicious contents.</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  X-Frame-Options</b>
+                    <p>Your site isn't defended against attacks like clickjacking.</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  Your reputation is under threat. Search engines such as Google </b>
+                    <p>X-XSS-Protection sets the configuration for the cross-site scripting filter built into most browsers. Recommended value "X-XSS-Protection: 1; mode=block".</p>
+                    <b><i class="glyphicon glyphicon-warning-sign"></i>  X-Content-Type-Options</b>
+                    <p>Your site isn't preventing an attacker from trying to MIME-sniff the content.</p>
                 </div>
             </div>
             <div id="pbar-confidentiality" class="col-md-10 col-md-offset-1">
                 <h2>Confidentiality</h2>
-                <div class="col-md-2">
-                    Certificate
-                </div>
+                <div class="col-md-2">Certificate</div>
                 <div class="col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="10">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    Protocol Support
-                </div>
+                <div class="col-md-2">Protocol Support</div>
                 <div class="col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-info" data-values="40">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    Key Exchange
-                </div>
+                <div class="col-md-2">Key Exchange</div>
                 <div class="col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-warning" data-values="80">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    Chipher Strength
-                </div>
+                <div class="col-md-2">Cipher Strength</div>
                 <div class="col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-success" data-values="90">0</div>
@@ -146,6 +143,7 @@
                 <div class="col-md-10 col-md-offset-2">
                     <p>Your site uses expired or not trusted certificate.</p>
                     <p>Your site support old or nonsecure protocols.</p>
+                    <p>Your site is insecure as a result of  SSL handshake failure.</p>
                 </div>
             </div>
             <div class="col-md-10 col-md-offset-1">
@@ -154,7 +152,7 @@
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="10">0</div>
                     </div>
-                    <p>Your reputation is under threat. Search engines such as Google </p>
+                    <p>Your site is not using strong cipher</p>
                 </div>
             </div>
             <div class="col-md-10 col-md-offset-1">
@@ -166,7 +164,7 @@
             <div class="col-md-10 col-md-offset-1">
                 <h2>Security (DNS)</h2>
                 <div class="col-md-10 col-md-offset-2">
-                    <p>DNSSEC records prevent attackers from falsifying DNS records that ensure the integrity of domain</p>
+                    <p>DNSSEC records prevent attackers from falsifying DNS records that ensure the integrity of a  domain</p>
                 </div>
             </div>
         </div>
