@@ -3,7 +3,7 @@ $(document).ready(function() {
     $('#test button').on('click', function(){
         trigger = true;
         if (formValidation()) {
-            sendRequest(website, email);
+            sendRequest($('#site-url').val(), $('#email-input').val());
         }
     });
     $('#site-url, #email-input').on('keyup',function(){
@@ -38,7 +38,8 @@ function formValidation() {
 
 }
 function checkIfNotEmpty(site) {
-    if (site.length != 0) return true;
+    var re = new RegExp("^(http|https)://", "i");
+    if (site.length != 0 && re.test(site)) return true;
 }
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
