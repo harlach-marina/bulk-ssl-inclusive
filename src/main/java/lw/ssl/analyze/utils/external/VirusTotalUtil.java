@@ -29,6 +29,7 @@ public final class VirusTotalUtil {
 
     public static VirusTotalResults getStatistics(String urlToCheck) {
         try {
+            System.out.println("Virus total scanning started!");
             sendRequestForScan(urlToCheck);
             Thread.sleep(REQUEST_REPEATING_INTERVAL);
             JSONObject scanResults = sendRequestForResults(urlToCheck);
@@ -36,7 +37,7 @@ public final class VirusTotalUtil {
                 System.out.println("Virus total error!");
                 return getStatistics(urlToCheck);
             } else {
-                System.out.println(scanResults);
+                System.out.println("Virus total scanning finished!");
                 return new VirusTotalResults(scanResults.optJSONObject("scans"));
             }
         } catch (IOException | InterruptedException e) {

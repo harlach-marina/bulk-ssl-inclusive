@@ -1,13 +1,12 @@
 package lw.ssl.analyze.restapi;
 
 
+import lw.ssl.analyze.pojo.TotalScanResults;
 import lw.ssl.analyze.pojo.dnssec.DnsSecAnalyzerResults;
 import lw.ssl.analyze.pojo.securityheaders.SecurityHeadersResults;
 import lw.ssl.analyze.pojo.virustotal.VirusTotalResults;
 import lw.ssl.analyze.report.PdfReport;
-import lw.ssl.analyze.utils.external.DnsSecAnalyzerUtil;
-import lw.ssl.analyze.utils.external.SecurityHeadersUtil;
-import lw.ssl.analyze.utils.external.VirusTotalUtil;
+import lw.ssl.analyze.utils.external.*;
 import lw.ssl.analyze.utils.notificators.EmailNotifier;
 import lw.ssl.analyze.utils.notificators.FileExtension;
 
@@ -17,6 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created on 14.10.2016;
@@ -32,28 +32,50 @@ public class SingleReportRestController {
 
     @GET
     public Response getReport(@QueryParam("email") String email,
+                              @QueryParam("username") String username,
                               @QueryParam("url") String url){
-        try {
-       //     SslLabsResults sslLabsResults = SslLabsUtil.getStatistics(url);
-            VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url);
-            SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url);
-      //      TlsCheckResults tlsCheckResults= TlsCheckUtil.getStatistics(email);
-            DnsSecAnalyzerResults dnsSecAnalyzerResults = DnsSecAnalyzerUtil.getStatistics(url);
+        startThreads(email, url);
+        return Response.status(200).entity(SUCCESS_MESSAGE).build();
+    }
 
-            PdfReport pdfReport = new PdfReport.PdfReportBuilder(url)
-                    .virusTotalResults(virusTotalResults)
-                    .securityHeadersResults(securityHeadersResults)
-       //             .sslLabsResults(sslLabsResults)
-        //            .tlsCheckResults(tlsCheckResults)
-                    .dnsSecAnalyzerResults(dnsSecAnalyzerResults)
-                    .build();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            pdfReport.getDocument().save(byteArrayOutputStream);
-            EmailNotifier.notifyWithAttachment(byteArrayOutputStream, FileExtension.PDF, REPORT_SUBJECT, email);
-            return Response.status(200).entity(SUCCESS_MESSAGE).build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Response.status(400).build();
+    private void startThreads(String email, String url) {
+        Thread maimThread = new Thread(() -> {
+            System.out.println("Analysis started at " + new Date() + "!");
+            try {
+                TotalScanResults totalScanResults = new TotalScanResults();
+                Thread sslLabsThread = new Thread(() -> {
+                    try {
+                        totalScanResults.setSslLabsResults(SslLabsUtil.getStatistics(url));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                sslLabsThread.start();
+                Thread tlsCheckThread = new Thread(() -> {
+                    totalScanResults.setTlsCheckResults(TlsCheckUtil.getStatistics(email));
+                });
+                tlsCheckThread.start();
+                VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url);
+                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url);
+                DnsSecAnalyzerResults dnsSecAnalyzerResults = DnsSecAnalyzerUtil.getStatistics(url);
+
+                sslLabsThread.join();
+                tlsCheckThread.join();
+                PdfReport pdfReport = new PdfReport.PdfReportBuilder(url)
+                        .virusTotalResults(virusTotalResults)
+                        .securityHeadersResults(securityHeadersResults)
+                        .sslLabsResults(totalScanResults.getSslLabsResults())
+                        .tlsCheckResults(totalScanResults.getTlsCheckResults())
+                        .dnsSecAnalyzerResults(dnsSecAnalyzerResults)
+                        .build();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                pdfReport.getDocument().save(byteArrayOutputStream);
+                EmailNotifier.notifyWithAttachment(byteArrayOutputStream, FileExtension.PDF, REPORT_SUBJECT, email);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Analysis finished at " + new Date() + "!");
+        });
+        maimThread.start();
     }
 }

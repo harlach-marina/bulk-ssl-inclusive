@@ -2,7 +2,6 @@ package lw.ssl.analyze.servlets.oauth;
 
 import api.lw.ssl.analyze.enums.oauthp.AuthType;
 import lw.ssl.analyze.report.PdfReportService;
-import lw.ssl.analyze.utils.external.DnsSecAnalyzerUtil;
 import lw.ssl.analyze.utils.notificators.EmailNotifier;
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,7 +44,6 @@ public class LoginServlet extends HttpServlet {
             if (authType != null) {
                 try {
                     String callbackCode = request.getParameter(CALLBACK_CODE);
-                    DnsSecAnalyzerUtil.getStatistics("students.bsuir.by");
 
                     if (StringUtils.isNotBlank(callbackCode)) {
                         String userName = "Vasiliy";

@@ -79,6 +79,7 @@ public final class SslLabsUtil {
 
     public static SslLabsResults getStatistics(final String host, final String port, boolean isNewAssessment, Integer attemptCount) throws IOException {
         if (attemptCount == null) {
+            System.out.println("SSL Labs scanning started!");
             attemptCount = 0;
         } else {
             if (++attemptCount > 60) {
@@ -102,6 +103,7 @@ public final class SslLabsUtil {
 
             if (HostAssessmentStatus.READY.getName().equals(currentHostAssessmentStatus) ||
                     HostAssessmentStatus.ERROR.getName().equals(currentHostAssessmentStatus)) {
+                System.out.println("SSL Labs scanning finished!");
                 return SslLabsResults.createFromResponse(analysisResponseJSON);
             } else {
                 int timerInterval;

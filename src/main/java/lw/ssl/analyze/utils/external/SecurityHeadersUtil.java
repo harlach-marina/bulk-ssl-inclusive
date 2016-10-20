@@ -40,13 +40,14 @@ public final class SecurityHeadersUtil {
     }
 
     public static SecurityHeadersResults getStatistics(String urlToCheck) {
+        System.out.println("Security headers scanning started!");
         importCertificate();
         Document doc = Jsoup.parse(sendRequestForResult(urlToCheck));
         Elements headersTable = doc.select(".pillList");
         Elements greenHeaders = headersTable.select(".headerItem.pill.pill-green");
         Elements redHeaders = headersTable.select(".headerItem.pill.pill-red");
         if (redHeaders.isEmpty() && greenHeaders.isEmpty()) {
-            System.out.println("Check failed!");
+            System.out.println("Security headers check failed!");
             try {
                 Thread.sleep(REQUEST_REPEATING_INTERVAL);
             } catch (InterruptedException e) {
@@ -69,6 +70,7 @@ public final class SecurityHeadersUtil {
                 }
             }
         }
+        System.out.println("Security headers scanning finished!");
         return results;
     }
 

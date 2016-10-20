@@ -32,6 +32,7 @@ public final class TlsCheckUtil {
     }
 
     public static TlsCheckResults getStatistics(String emailToCheck) {
+        System.out.println("TLS Check scanning started!");
         Document doc = Jsoup.parse(sendRequestForResult(emailToCheck));
         Elements resultsTable = doc.select("#Matrix");
         Elements percentsResults = resultsTable.select(".totalrow");
@@ -59,6 +60,7 @@ public final class TlsCheckUtil {
                 tlsNegPercents = Integer.parseInt(percentsAsText);
             }
         }
+        System.out.println("TLS Check scanning finished!");
         return new TlsCheckResults(tlsAdvPercents, certOkPercents, tlsNegPercents);
     }
 
