@@ -13,10 +13,10 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * Created on 12.10.2016;
@@ -29,12 +29,8 @@ public class PdfReport {
     private static PDDocument doc = new PDDocument();
 
     private PdfReport(PdfReportBuilder builder) {
-        doc = new PDDocument();
-        PDPage page = new PDPage();
-        doc.addPage(page);
-
         try {
-            PDPageContentStream content = new ContentBuilder(doc, page)
+            doc = new DocumentBuilder()
                     .title(builder.siteUrl)
                     .summaryBar()
                     .reputation(builder.reputationPercentage)
@@ -50,7 +46,6 @@ public class PdfReport {
                     .integrity(builder.isIntegral)
                     .securityDns(builder.securityDnsPercentage, builder.dnsSecAnalyzerRedResults)
                     .build();
-            content.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,8 +121,10 @@ public class PdfReport {
         }
     }
 
-    private static class ContentBuilder {
+    private static class DocumentBuilder {
+        private PDDocument doc;
         private PDFont paragraphFont;
+        private static final Integer NEXT_PAGE_THRESHOLD = 200;
         private static final Integer PARAGRAPH_FONT_SIZE = 14;
 
         private static final Integer PARAGRAPH_OFFSET_X = 70;
@@ -164,25 +161,24 @@ public class PdfReport {
         private Integer pageWidth;
         private Integer currentOffsetY;
 
-        private Boolean isStatusBarBuilt = false;
-        private Map<String, Integer> statisticsEntries = new TreeMap<>();
-        private Integer statusBarOffsetY;
+        private Boolean isSummaryBarBuilt = false;
+        private PDPageContentStream summaryBarContent;
+        private Map<String, Integer> statisticsEntries = new LinkedHashMap<>();
+        private Integer summaryBarOffsetY;
 
-        private ContentBuilder(PDDocument doc, PDPage page) {
+        private DocumentBuilder() {
             try {
-                content = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, false);
-                pageHeight = Math.round(page.getMediaBox().getHeight());
-                pageWidth = Math.round(page.getMediaBox().getWidth());
-                currentOffsetY = pageHeight;
-                paragraphFont = PDType0Font.load(doc, ContentBuilder.class.getResourceAsStream("/fonts/Bitter-Regular.ttf"));
-                detailsFont = PDType0Font.load(doc, ContentBuilder.class.getResourceAsStream("/fonts/Lato-Regular.ttf"));
-                detailsBoldFont = PDType0Font.load(doc, ContentBuilder.class.getResourceAsStream("/fonts/Lato-Bold.ttf"));
+                doc = new PDDocument();
+                setActualContent();
+                paragraphFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Bitter-Regular.ttf"));
+                detailsFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Lato-Regular.ttf"));
+                detailsBoldFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Lato-Bold.ttf"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        private ContentBuilder title(String urlTitle) throws IOException {
+        private DocumentBuilder title(String urlTitle) throws IOException {
             if (urlTitle == null) {
                 return this;
             }
@@ -194,10 +190,11 @@ public class PdfReport {
             Integer xOffset = (pageWidth - titleWidth.intValue()) / 2;
             Integer yOffset = currentOffsetY - titleHeight.intValue();
             appendText(urlTitle, paragraphFont, PARAGRAPH_FONT_SIZE, xOffset, yOffset);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder summaryBar() throws IOException {
+        private DocumentBuilder summaryBar() throws IOException {
             // Write status bar title
             String title = "Digital Security Scanner Measurement";
             currentOffsetY -= DETAILS_OFFSET_Y;
@@ -230,12 +227,14 @@ public class PdfReport {
                 appendText(i.toString() + "%", detailsFont, SUMMARY_BAR_FONT_SIZE, summaryBarOffsetX - 30, currentOffsetY);
                 currentOffsetY -= linesInterval;
             }
-            isStatusBarBuilt = true;
-            statusBarOffsetY = currentOffsetY + linesInterval;
+            isSummaryBarBuilt = true;
+            summaryBarOffsetY = currentOffsetY + linesInterval;
+            summaryBarContent = content;
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder reputation(Integer percentage) throws IOException {
+        private DocumentBuilder reputation(Integer percentage) throws IOException {
             if (percentage == null) {
                 return this;
             }
@@ -256,12 +255,13 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Reputation", percentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder communication(Integer tlsAdvPercents,
-                                             Integer certOkPercents,
-                                             Integer tlsNegPercents) throws IOException {
+        private DocumentBuilder communication(Integer tlsAdvPercents,
+                                              Integer certOkPercents,
+                                              Integer tlsNegPercents) throws IOException {
             if (tlsAdvPercents == null || certOkPercents == null || tlsNegPercents == null) {
                 return this;
             }
@@ -296,10 +296,11 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Communication", communicationPercentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder compliance(Boolean isCompliant) throws IOException {
+        private DocumentBuilder compliance(Boolean isCompliant) throws IOException {
             if (isCompliant == null) {
                 return this;
             }
@@ -315,10 +316,11 @@ public class PdfReport {
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             statisticsEntries.put("Compliance", compliancePercentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder securityWeb(List<String> redHeaders, Integer maxRedHeadersCount) throws IOException {
+        private DocumentBuilder securityWeb(List<String> redHeaders, Integer maxRedHeadersCount) throws IOException {
             if (redHeaders == null || maxRedHeadersCount == null) {
                 return this;
             }
@@ -339,13 +341,14 @@ public class PdfReport {
                 appendText(getHeaderComment(s), detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Security (Web)", percentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder confidentiality(Boolean certificateValidity,
-                                               Integer protocolPercentage,
-                                               Integer keyPercentage,
-                                               Integer cipherPercentage) throws IOException {
+        private DocumentBuilder confidentiality(Boolean certificateValidity,
+                                                Integer protocolPercentage,
+                                                Integer keyPercentage,
+                                                Integer cipherPercentage) throws IOException {
             if (certificateValidity == null || protocolPercentage == null
                     || keyPercentage == null || cipherPercentage == null) {
                 return this;
@@ -386,10 +389,11 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Confidentiality", certificatePercentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder integrity(Boolean isIntegral) throws IOException {
+        private DocumentBuilder integrity(Boolean isIntegral) throws IOException {
             if (isIntegral == null) {
                 return this;
             }
@@ -402,10 +406,11 @@ public class PdfReport {
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             statisticsEntries.put("Integrity", percentage);
+            setActualContent();
             return this;
         }
 
-        private ContentBuilder securityDns(Integer percentage, Set<String> badResults) throws IOException {
+        private DocumentBuilder securityDns(Integer percentage, Set<String> badResults) throws IOException {
             if (percentage == null || badResults == null) {
                 return this;
             }
@@ -413,37 +418,61 @@ public class PdfReport {
             appendText("Security (DNS)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
-            if (badResults.isEmpty()) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
+            currentOffsetY -= DETAILS_OFFSET_Y;
+            if (percentage == 100) {
                 appendText("DNS check didn't detect any problems.", detailsFont, DETAILS_FONT_SIZE,
                         DETAILS_OFFSET_X, currentOffsetY);
-            }
-            for (String s : badResults) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText(s, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
+            } else {
+                appendText("DNSSEC records prevent attackers from falsifying DNS records that ensure the ",
+                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
+                appendText("integrity of a domain.",
+                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Security (DNS)", percentage);
+            setActualContent();
             return this;
         }
 
-        PDPageContentStream build() throws IOException {
-            if (isStatusBarBuilt) {
+        PDDocument build() throws IOException {
+            if (isSummaryBarBuilt) {
+                content.close();
+                content = summaryBarContent;
                 Integer summaryBarOffsetX = (pageWidth - SUMMARY_BAR_WIDTH) / 2;
-                currentOffsetY = statusBarOffsetY;
+                currentOffsetY = summaryBarOffsetY;
                 Integer currentOffsetX = summaryBarOffsetX + SUMMARY_METRIC_MARGIN / 2;
                 Integer barWidth = SUMMARY_BAR_WIDTH / statisticsEntries.size() - SUMMARY_METRIC_MARGIN;
                 for (Map.Entry<String, Integer> entry : statisticsEntries.entrySet()) {
                     content.setNonStrokingColor(getColorByPercentage(entry.getValue()));
                     Float barHeight = SUMMARY_BAR_HEIGHT / 100F * entry.getValue();
                     content.addRect(currentOffsetX, currentOffsetY, barWidth, barHeight);
-                    content.fill();
                     currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                    appendText(entry.getKey(), detailsFont, SUMMARY_BAR_FONT_SIZE, currentOffsetX, currentOffsetY);
+                    Float titleWidth = paragraphFont.getStringWidth(entry.getKey()) / 1000
+                            * SUMMARY_BAR_FONT_SIZE;
+                    Float titleOffset = currentOffsetX - titleWidth / 2 + barWidth / 2 + 1; // +1 for better draw
+                    content.fill();
+                    appendText(entry.getKey(), detailsFont, SUMMARY_BAR_FONT_SIZE, titleOffset.intValue(), currentOffsetY);
                     currentOffsetY += DETAILS_SMALL_OFFSET_Y;
                     currentOffsetX += barWidth + SUMMARY_METRIC_MARGIN;
                 }
+                content.close();
             }
-            return content;
+            return doc;
+        }
+
+        private void setActualContent() throws IOException {
+
+            if (currentOffsetY == null || currentOffsetY < NEXT_PAGE_THRESHOLD) {
+                if (content != null) {
+                    content.close();
+                }
+                PDPage page = new PDPage();
+                doc.addPage(page);
+                content = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, false);
+                pageHeight = Math.round(page.getMediaBox().getHeight());
+                pageWidth = Math.round(page.getMediaBox().getWidth());
+                currentOffsetY = pageHeight;
+            }
         }
 
         private void appendText(String text, PDFont font,

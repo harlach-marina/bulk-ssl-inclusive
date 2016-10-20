@@ -19,6 +19,9 @@ public class DnsSecAnalyzerResults {
     }
 
     public Integer getPercentageOfGreenResults() {
+        if (redResults.size() + greenResults.size() == 0) {
+            return 0;
+        }
         return redResults.size() * 100 / (redResults.size() + greenResults.size());
     }
 
