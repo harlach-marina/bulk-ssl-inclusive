@@ -244,10 +244,7 @@ public class PdfReport {
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
             currentOffsetY -= DETAILS_OFFSET_Y;
-            if (percentage == 100) {
-                appendText("Your reputation is safe.", detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X,
-                        currentOffsetY);
-            } else {
+            if (percentage <= 75) {
                 appendText("Your reputation is under threat.", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X,
                         currentOffsetY);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
@@ -274,12 +271,7 @@ public class PdfReport {
                 communicationPercentage = 15;
             }
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, communicationPercentage);
-            if (communicationPercentage == 100) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("Communication check didn't detect any problems.", detailsFont, DETAILS_FONT_SIZE,
-                        DETAILS_OFFSET_X, currentOffsetY);
-            }
-            if (tlsAdvPercents < 100) {
+            if (tlsAdvPercents <= 75) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("TLS Adv", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
@@ -287,7 +279,7 @@ public class PdfReport {
                                 "information as at risk of being sniffed and stolen.",
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
-            if (certOkPercents < 100) {
+            if (certOkPercents <= 75) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("Cert OK", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
@@ -295,7 +287,7 @@ public class PdfReport {
                                 "because it can no longer be trusted.",
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
-            if (tlsNegPercents < 100) {
+            if (tlsNegPercents <= 75) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("TLS Neg", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
@@ -316,12 +308,12 @@ public class PdfReport {
             appendText("Compliance", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, compliancePercentage);
-            String details = (compliancePercentage == 100)
-                    ? "Your site is PCI Compliant."
-                    : "For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. " +
-                    "Reconfigure or update to TLS 1.2.";
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            if (compliancePercentage <= 75) {
+                String details = "For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. " +
+                        "Reconfigure or update to TLS 1.2.";
+                currentOffsetY -= DETAILS_OFFSET_Y;
+                appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            }
             statisticsEntries.put("Compliance", compliancePercentage);
             setActualContent();
             return this;
@@ -335,11 +327,6 @@ public class PdfReport {
             appendText("Security (WEB)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
-            if (redHeaders.isEmpty()) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("Your site using all required security headers.", detailsFont, DETAILS_FONT_SIZE,
-                        DETAILS_OFFSET_X, currentOffsetY);
-            }
             for (String s : redHeaders) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText(s, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
@@ -416,9 +403,10 @@ public class PdfReport {
             currentOffsetY -= DETAILS_OFFSET_Y;
             Integer percentage = isIntegral ? 100 : 10;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
-            String details = isIntegral ? "Your site is using strong cipher" : "Your site is not using strong cipher";
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            if (percentage <= 75) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
+                appendText("Your site is not using strong cipher", detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            }
             statisticsEntries.put("Integrity", percentage);
             setActualContent();
             return this;
@@ -428,15 +416,11 @@ public class PdfReport {
             if (percentage == null || badResults == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Security (DNS)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            appendParagraphTitle("Security (DNS)");
             currentOffsetY -= DETAILS_OFFSET_Y;
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
             currentOffsetY -= DETAILS_OFFSET_Y;
-            if (percentage == 100) {
-                appendText("DNS check didn't detect any problems.", detailsFont, DETAILS_FONT_SIZE,
-                        DETAILS_OFFSET_X, currentOffsetY);
-            } else {
+            if (percentage <= 75) {
                 appendText("DNSSEC records prevent attackers from falsifying DNS records that ensure the ",
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
@@ -486,6 +470,11 @@ public class PdfReport {
                 pageWidth = Math.round(page.getMediaBox().getWidth());
                 currentOffsetY = pageHeight;
             }
+        }
+
+        private void appendParagraphTitle(String title) throws IOException {
+            currentOffsetY -= PARAGRAPH_OFFSET_Y;
+            appendText(title, paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
         }
 
         private void appendText(String text, PDFont font,
