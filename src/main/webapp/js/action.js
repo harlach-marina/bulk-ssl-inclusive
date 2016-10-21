@@ -1,41 +1,37 @@
 $(document).ready(function() {
     var trigger = false;
+    var websiteWarning = $('#test .form-control-feedback-url');
+    var emailWarning = $('#test .form-control-feedback-email');
     $('#test button').on('click', function(){
         trigger = true;
-        if (formValidation()) {
+        if (formValidation(trigger, websiteWarning, emailWarning)) {
             sendRequest($('#site-url').val(), $('#email-input').val());
         }
     });
     $('#site-url, #email-input').on('keyup',function(){
         if (trigger){
-            formValidation();
+            formValidation(trigger, websiteWarning, emailWarning);
         }
     })
 });
-function formValidation() {
+function formValidation(trigger, websiteWarning, emailWarning) {
     var website = $('#site-url').val();
     var email = $('#email-input').val();
-    var websiteWarning = $('#test .form-control-feedback-url');
-    var emailWarning = $('#test .form-control-feedback-email');
+    var ifEmpty = 'Required field cannot be left blank';
+    var invalidEmail = 'Please enter a valid email';
 
-    if (checkIfNotEmpty(website) && validateEmail(email)) {
-        websiteWarning.addClass('hidden');
+    if(validateEmail(email)) {
         emailWarning.addClass('hidden');
-        return true;
-    } else if (!checkIfNotEmpty(website) && validateEmail(email)) {
-            websiteWarning.removeClass('hidden');
-            emailWarning.addClass('hidden');
-            return false;
-    } else if (checkIfNotEmpty(website) && !validateEmail(email)) {
-        websiteWarning.addClass('hidden');
-        emailWarning.removeClass('hidden');
-        return false;
-    } else {
-        websiteWarning.removeClass('hidden');
-        emailWarning.removeClass('hidden');
-        return false;
+    } else if (!checkIfNotEmpty(email)) {
+        emailWarning.text(ifEmpty).removeClass('hidden');
+    } else if (checkIfNotEmpty(email) && !validateEmail(email)) {
+        emailWarning.text(invalidEmail).removeClass('hidden');
     }
-
+    if(checkIfNotEmpty(website)) {
+        websiteWarning.addClass('hidden');
+    } else if (!checkIfNotEmpty(website)) {
+        websiteWarning.text(ifEmpty).removeClass('hidden');
+    }
 }
 function checkIfNotEmpty(site) {
     if (site.length != 0) return true;
@@ -90,15 +86,9 @@ $(".progress div").each(function () {
 });
 $(function() {
     $.fn.scrollToTop = function() {
-        $(this).hide().removeAttr("href");
-        if ($(window).scrollTop() >= "250") $(this).fadeIn("slow")
-        var scrollDiv = $(this);
-        $(window).scroll(function() {
-            if ($(window).scrollTop() <= "250") $(scrollDiv).fadeOut("slow")
-            else $(scrollDiv).fadeIn("slow")
-        });
         $(this).click(function() {
-            $("html, body").animate({scrollTop: 0}, "slow")
+            $("html, body").animate({scrollTop: 0}, "slow");
+            $("#site-url").focus();
         })
     }
 });
