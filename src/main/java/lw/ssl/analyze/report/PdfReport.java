@@ -133,20 +133,21 @@ public class PdfReport {
 
         private PDFont detailsFont;
         private PDFont detailsBoldFont;
+        private PDFont warningFont;
         private static final Integer DETAILS_FONT_SIZE = 8;
-        private static final Integer DETAILS_OFFSET_X = 150;
+        private static final Integer DETAILS_OFFSET_X = 130;
         private static final Integer DETAILS_OFFSET_Y = 20;
         private static final Integer DETAILS_SMALL_OFFSET_Y = 10;
 
         private static final Integer SUMMARY_BAR_HEIGHT = 120;
-        private static final Integer SUMMARY_BAR_WIDTH = 300;
+        private static final Integer SUMMARY_BAR_WIDTH = 350;
         private static final Float SUMMARY_BAR_LINES_WIDTH = 0.3F;
         private static final Integer SUMMARY_BAR_LINES_COUNT = 10;
-        private static final Integer SUMMARY_METRIC_MARGIN = 25;
+        private static final Integer SUMMARY_METRIC_MARGIN = 18;
         private static final Integer SUMMARY_BAR_FONT_SIZE = 6;
 
         private static final Float PERCENTAGE_LINE_HEIGHT = 10F;
-        private static final Float PERCENTAGE_LINE_WIDTH = 300F;
+        private static final Float PERCENTAGE_LINE_WIDTH = 380F;
 
         private static final Color COLOR_BLACK = new Color(4, 4, 4);
         private static final Color COLOR_VERY_LIGHT_GRAY = new Color(246, 246, 246);
@@ -174,6 +175,7 @@ public class PdfReport {
                 paragraphFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Bitter-Regular.ttf"));
                 detailsFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Lato-Regular.ttf"));
                 detailsBoldFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/Lato-Bold.ttf"));
+                warningFont = PDType0Font.load(doc, DocumentBuilder.class.getResourceAsStream("/fonts/ufonts.com_segoe-ui-symbol.ttf"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -190,7 +192,7 @@ public class PdfReport {
                     * PARAGRAPH_FONT_SIZE;
             Integer xOffset = (pageWidth - titleWidth.intValue()) / 2;
             Integer yOffset = currentOffsetY - titleHeight.intValue();
-            appendText(urlTitle, paragraphFont, PARAGRAPH_FONT_SIZE, xOffset, yOffset);
+            appendTextWithoutNewLine(urlTitle, paragraphFont, PARAGRAPH_FONT_SIZE, xOffset, yOffset);
             setActualContent();
             return this;
         }
@@ -205,7 +207,7 @@ public class PdfReport {
                     * DETAILS_FONT_SIZE;
             Integer xOffset = (pageWidth - titleWidth.intValue()) / 2;
             Integer yOffset = currentOffsetY - titleHeight.intValue();
-            appendText(title, detailsBoldFont, DETAILS_FONT_SIZE, xOffset, yOffset);
+            appendTextWithoutNewLine(title, detailsBoldFont, DETAILS_FONT_SIZE, xOffset, yOffset);
             // Build background
             currentOffsetY -= DETAILS_OFFSET_Y + SUMMARY_BAR_HEIGHT;
             Integer summaryBarOffsetX = (pageWidth - SUMMARY_BAR_WIDTH) / 2;
@@ -225,7 +227,7 @@ public class PdfReport {
             }
             // Draw percents scale
             for (Integer i = 100; i >= 0; i -= 10) {
-                appendText(i.toString() + "%", detailsFont, SUMMARY_BAR_FONT_SIZE, summaryBarOffsetX - 30, currentOffsetY);
+                appendTextWithoutNewLine(i.toString() + "%", detailsFont, SUMMARY_BAR_FONT_SIZE, summaryBarOffsetX - 30, currentOffsetY);
                 currentOffsetY -= linesInterval;
             }
             isSummaryBarBuilt = true;
@@ -239,18 +241,12 @@ public class PdfReport {
             if (percentage == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Reputation", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
-            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendParagraphTitle("Reputation");
+            appendPercentageLine(percentage);
             if (percentage <= 75) {
-                appendText("Your reputation is under threat.", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X,
-                        currentOffsetY);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Search engines as Google may notify your users to avoid using your site " +
-                                "because it contains malware or other threats",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsText("Your reputation is under threat.", detailsBoldFont);
+                appendDetailsTextWithSmallOffset("Search engines as Google may notify your users to avoid " +
+                        "using your site because it contains malware or other threats");
             }
             statisticsEntries.put("Reputation", percentage);
             setActualContent();
@@ -263,36 +259,26 @@ public class PdfReport {
             if (tlsAdvPercents == null || certOkPercents == null || tlsNegPercents == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Communication", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendParagraphTitle("Communication");
             Integer communicationPercentage = (tlsAdvPercents + certOkPercents + tlsNegPercents) / 3;
             if (communicationPercentage < 15) {
                 communicationPercentage = 15;
             }
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, communicationPercentage);
+            appendPercentageLine(communicationPercentage);
             if (tlsAdvPercents <= 75) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("TLS Adv", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Without TLS your data in motion such as passwords, emails, VoIP or credit card " +
-                                "information as at risk of being sniffed and stolen.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsWarningText("TLS Adv");
+                appendDetailsTextWithSmallOffset("Without TLS your data in motion such as passwords, emails, " +
+                        "VoIP or credit card information as at risk of being sniffed and stolen.");
             }
             if (certOkPercents <= 75) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("Cert OK", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("An expired certificate means there is a risk of Man in the middle attack, " +
-                                "because it can no longer be trusted.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsWarningText("Cert OK");
+                appendDetailsTextWithSmallOffset("An expired certificate means there is a risk of Man in the middle " +
+                        "attack, because it can no longer be trusted.");
             }
             if (tlsNegPercents <= 75) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("TLS Neg", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Checks to ensure Email transmission is encrypted and secure from eavesdroppers.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsWarningText("TLS Neg");
+                appendDetailsTextWithSmallOffset("Checks to ensure Email transmission is encrypted and secure " +
+                        "from eavesdroppers.");
             }
             statisticsEntries.put("Communication", communicationPercentage);
             setActualContent();
@@ -304,15 +290,11 @@ public class PdfReport {
                 return this;
             }
             Integer compliancePercentage = isCompliant ? 100 : 15;
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Compliance", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, compliancePercentage);
+            appendParagraphTitle("Compliance");
+            appendPercentageLine(compliancePercentage);
             if (compliancePercentage <= 75) {
-                String details = "For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. " +
-                        "Reconfigure or update to TLS 1.2.";
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText(details, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsText("For your business to be PCI Compliant, you need to stop running SSL 2.0, " +
+                        "SSL 3.0 or TLS 1.0. Reconfigure or update to TLS 1.2.");
             }
             statisticsEntries.put("Compliance", compliancePercentage);
             setActualContent();
@@ -323,22 +305,16 @@ public class PdfReport {
             if (redHeaders == null || percentage == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Security (WEB)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
+            appendParagraphTitle("Security (WEB)");
+            appendPercentageLine(percentage);
             for (String s : redHeaders) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText(s, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
+                appendDetailsWarningText(s);
                 if ("X-XSS-Protection".equals(s)) {
-                    appendText("X-XSS-Protection sets the configuration for the cross-site scripting filter built into " +
-                                    "most browsers. ", detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
-                    currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                    appendText("Recommended value \"X-XSS-Protection: 1;mode=block\".",
-                            detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                    appendDetailsTextWithSmallOffset("X-XSS-Protection sets the configuration for the cross-site " +
+                            "scripting filter built into most browsers. ");
+                    appendDetailsTextWithSmallOffset("Recommended value \"X-XSS-Protection: 1;mode=block\".");
                 } else {
-                    appendText(getHeaderComment(s), detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                    appendDetailsTextWithSmallOffset(getHeaderComment(s));
                 }
             }
             statisticsEntries.put("Security (Web)", percentage);
@@ -354,42 +330,33 @@ public class PdfReport {
                     || keyPercentage == null || cipherPercentage == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Confidentiality", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendParagraphTitle("Confidentiality");
             Integer certificatePercentage = certificateValidity ? 100 : 15;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, certificatePercentage);
-            appendText("Certificate", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, protocolPercentage);
-            appendText("Protocol Support", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, keyPercentage);
-            appendText("Key Exchange", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, cipherPercentage);
-            appendText("Cipher Strength", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            if (!certificateValidity) {
+            appendPercentageLine(certificatePercentage);
+            appendTextWithoutNewLine("Certificate", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            appendPercentageLine(protocolPercentage);
+            appendTextWithoutNewLine("Protocol Support", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            appendPercentageLine(keyPercentage);
+            appendTextWithoutNewLine("Key Exchange", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            appendPercentageLine(cipherPercentage);
+            appendTextWithoutNewLine("Cipher Strength", detailsBoldFont, DETAILS_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            if (!certificateValidity || protocolPercentage <= 75 || keyPercentage <= 75 || cipherPercentage <= 75) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("Your site uses expired or not trusted certificate.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+            }
+            if (!certificateValidity) {
+                appendDetailsTextWithSmallOffset("Your site uses expired or not trusted certificate.");
             }
             if (protocolPercentage <= 75) {
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Your site support old or nonsecure protocols",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsTextWithSmallOffset("Your site support old or nonsecure protocols");
             }
             if (keyPercentage <= 75) {
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Your site is insecure as a result of SSL handshake failure.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsTextWithSmallOffset("Your site is insecure as a result of SSL handshake failure.");
             }
             if (cipherPercentage <= 75) {
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("Your site is not using strong cipher.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsTextWithSmallOffset("Your site is not using strong cipher.");
             }
-            statisticsEntries.put("Confidentiality", certificatePercentage);
+            Integer averageRating = (certificatePercentage + protocolPercentage + keyPercentage + cipherPercentage) / 4;
+            statisticsEntries.put("Confidentiality", averageRating);
             setActualContent();
             return this;
         }
@@ -398,14 +365,11 @@ public class PdfReport {
             if (isIntegral == null) {
                 return this;
             }
-            currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText("Integrity", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
-            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendParagraphTitle("Integrity");
             Integer percentage = isIntegral ? 100 : 10;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
+            appendPercentageLine(percentage);
             if (percentage <= 75) {
-                currentOffsetY -= DETAILS_OFFSET_Y;
-                appendText("Your site is not using strong cipher", detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsText("Your site is not using strong cipher");
             }
             statisticsEntries.put("Integrity", percentage);
             setActualContent();
@@ -417,15 +381,10 @@ public class PdfReport {
                 return this;
             }
             appendParagraphTitle("Security (DNS)");
-            currentOffsetY -= DETAILS_OFFSET_Y;
-            appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
-            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendPercentageLine(percentage);
             if (percentage <= 75) {
-                appendText("DNSSEC records prevent attackers from falsifying DNS records that ensure the ",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
-                currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText("integrity of a domain.",
-                        detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                appendDetailsText("DNSSEC records prevent attackers from falsifying DNS records that ensure the ");
+                appendDetailsTextWithSmallOffset("integrity of a domain.");
             }
             statisticsEntries.put("Security (DNS)", percentage);
             return this;
@@ -446,9 +405,9 @@ public class PdfReport {
                     currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
                     Float titleWidth = paragraphFont.getStringWidth(entry.getKey()) / 1000
                             * SUMMARY_BAR_FONT_SIZE;
-                    Float titleOffset = currentOffsetX - titleWidth / 2 + barWidth / 2 + 1; // +1 for better draw
+                    Float titleOffset = currentOffsetX - titleWidth / 2 + barWidth / 2 + 4; // +4 for better centering
                     content.fill();
-                    appendText(entry.getKey(), detailsFont, SUMMARY_BAR_FONT_SIZE, titleOffset.intValue(), currentOffsetY);
+                    appendTextWithoutNewLine(entry.getKey(), detailsFont, SUMMARY_BAR_FONT_SIZE, titleOffset.intValue(), currentOffsetY);
                     currentOffsetY += DETAILS_SMALL_OFFSET_Y;
                     currentOffsetX += barWidth + SUMMARY_METRIC_MARGIN;
                 }
@@ -474,17 +433,39 @@ public class PdfReport {
 
         private void appendParagraphTitle(String title) throws IOException {
             currentOffsetY -= PARAGRAPH_OFFSET_Y;
-            appendText(title, paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
+            appendTextWithoutNewLine(title, paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
         }
 
-        private void appendText(String text, PDFont font,
-                                Integer fontSize, Integer offsetX, Integer offsetY)
+        private void appendDetailsText(String text, PDFont font) throws IOException {
+            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendTextWithoutNewLine(text, font, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+        }
+
+        private void appendDetailsWarningText(String text) throws IOException {
+            currentOffsetY -= DETAILS_OFFSET_Y;
+            appendTextWithoutNewLine("" + '\u26a0', warningFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X - 10,
+                    currentOffsetY, COLOR_RED);
+            appendTextWithoutNewLine(text, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY,
+                    COLOR_RED);
+        }
+
+        private void appendDetailsTextWithSmallOffset(String text) throws IOException {
+            currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
+            appendTextWithoutNewLine(text, detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+        }
+
+        private void appendDetailsText(String text) throws IOException {
+            appendDetailsText(text, detailsFont);
+        }
+
+        private void appendTextWithoutNewLine(String text, PDFont font,
+                                              Integer fontSize, Integer offsetX, Integer offsetY)
                 throws IOException {
-            appendText(text, font, fontSize, offsetX, offsetY, COLOR_BLACK);
+            appendTextWithoutNewLine(text, font, fontSize, offsetX, offsetY, COLOR_BLACK);
         }
 
-        private void appendText(String text, PDFont font,
-                                Integer fontSize, Integer offsetX, Integer offsetY, Color color)
+        private void appendTextWithoutNewLine(String text, PDFont font,
+                                              Integer fontSize, Integer offsetX, Integer offsetY, Color color)
                 throws IOException {
             content.beginText();
             content.setNonStrokingColor(color);
@@ -494,14 +475,14 @@ public class PdfReport {
             content.endText();
         }
 
-        private void appendPercentageLine(Integer offsetX, Integer offsetY,
-                                          Integer percentage) throws IOException {
-            offsetY -= 2;
+        private void appendPercentageLine(Integer percentage) throws IOException {
+            currentOffsetY -= DETAILS_OFFSET_Y;
+            Integer offsetY = currentOffsetY - 2;
             content.setNonStrokingColor(COLOR_LIGHT_GRAY);
-            content.addRect(offsetX, offsetY, PERCENTAGE_LINE_WIDTH, PERCENTAGE_LINE_HEIGHT);
+            content.addRect(DETAILS_OFFSET_X, offsetY, PERCENTAGE_LINE_WIDTH, PERCENTAGE_LINE_HEIGHT);
             content.fill();
             content.setNonStrokingColor(getColorByPercentage(percentage));
-            content.addRect(offsetX, offsetY, percentage * PERCENTAGE_LINE_WIDTH / 100, PERCENTAGE_LINE_HEIGHT);
+            content.addRect(DETAILS_OFFSET_X, offsetY, percentage * PERCENTAGE_LINE_WIDTH / 100, PERCENTAGE_LINE_HEIGHT);
             content.fill();
             content.closeAndStroke();
             content.close();
