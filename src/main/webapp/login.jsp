@@ -42,7 +42,7 @@
             <h3>Find out how well your website it protected</h3>
             <div id="test" class="col-md-8 col-md-offset-2">
                 <div class="form-group">
-                    <input id="site-url" class="form-control" type="url" name="site-url" placeholder="http:// or https://, *" required>
+                    <input id="site-url" autofocus class="form-control" type="url" name="site-url" placeholder="Enter website URL, *" required>
                     <div class="hidden form-control-feedback-url">Required field cannot be left blank</div>
                 </div>
                 <div class="form-group">
