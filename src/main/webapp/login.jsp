@@ -68,7 +68,7 @@
                 <h2>Reputation</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-danger" data-values="20">0</div>
+                        <div class="progress-bar progress-bar-info" data-values="48">0</div>
                     </div>
                     <b>Your reputation is under threat.</b>
                     <p>Search engines such as Google may notify your users to avoid using your site because it contains malware or other threats.</p>
@@ -78,13 +78,8 @@
                 <h2>Communication</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-success" data-values="90">0</div>
+                        <div class="progress-bar progress-bar-warning" data-values="68">0</div>
                     </div>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>  TLS Adv</b>
-                    <p>Without TLS,  your data in motion such as passwords, emails, VoIP or credit card information is at risk of being
-                        sniffed and stolen.</p>
-                    <b><i class="glyphicon glyphicon-warning-sign"></i>  Cert OK</b>
-                    <p>An expired certificate means there is a risk of Man in the middle attack, because it can no longer be trusted.</p>
                     <b><i class="glyphicon glyphicon-warning-sign"></i>  TLS Neg</b>
                     <p>Checks to ensure Email transmission is encrypted and secure from  eavesdroppers.</p>
                 </div>
@@ -93,7 +88,7 @@
                 <h2>Compliance</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                        <div class="progress-bar progress-bar-info" data-values="40">0</div>
                     </div>
                     <b>For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. Reconfigure or upgrade to TLS 1.2.</b>
                 </div>
@@ -102,7 +97,7 @@
                 <h2>Security (Web)</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-info" data-values="40">0</div>
+                        <div class="progress-bar progress-bar-danger" data-values="8">0</div>
                     </div>
                     <b><i class="glyphicon glyphicon-warning-sign"></i>  Content-Security-Policy</b>
                     <p>Your site is not protect from XSS attacks. You need to prevent user  browser from loading malicious contents.</p>
@@ -119,25 +114,25 @@
                 <div class="col-md-2">Certificate</div>
                 <div class="col-md-10">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                        <div class="progress-bar progress-bar-danger" data-values="15">0</div>
                     </div>
                 </div>
                 <div class="col-md-2">Protocol Support</div>
                 <div class="col-md-10">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-info" data-values="40">0</div>
+                        <div class="progress-bar progress-bar-info" data-values="24">0</div>
                     </div>
                 </div>
                 <div class="col-md-2">Key Exchange</div>
                 <div class="col-md-10">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-warning" data-values="80">0</div>
+                        <div class="progress-bar progress-bar-warning" data-values="51">0</div>
                     </div>
                 </div>
                 <div class="col-md-2">Cipher Strength</div>
                 <div class="col-md-10">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-success" data-values="90">0</div>
+                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
                     </div>
                 </div>
                 <div class="col-md-10 col-md-offset-2">
@@ -150,7 +145,7 @@
                 <h2>Integrity</h2>
                 <div class="col-md-10 col-md-offset-2">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-danger" data-values="10">0</div>
+                        <div class="progress-bar progress-bar-danger" data-values="18">0</div>
                     </div>
                     <p>Your site is not using strong cipher</p>
                 </div>
@@ -158,13 +153,17 @@
             <div class="col-md-10 col-md-offset-1">
                 <h2>Availability</h2>
                 <div class="col-md-10 col-md-offset-2">
-                    <p>Your site is not using strong cipher</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" data-values="98">0</div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-10 col-md-offset-1">
                 <h2>Security (DNS)</h2>
                 <div class="col-md-10 col-md-offset-2">
-                    <p>DNSSEC records prevent attackers from falsifying DNS records that ensure the integrity of a  domain</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" data-values="80">0</div>
+                    </div>
                 </div>
             </div>
         </div>

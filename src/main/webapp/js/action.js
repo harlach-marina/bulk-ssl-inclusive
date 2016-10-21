@@ -1,16 +1,23 @@
 $(document).ready(function() {
     var trigger = false;
-    var websiteWarning = $('#test .form-control-feedback-url');
-    var emailWarning = $('#test .form-control-feedback-email');
-    $('#test button').on('click', function(){
+    var websiteWarning = $('#test').find('.form-control-feedback-url');
+    var emailWarning = $('#test').find('.form-control-feedback-email');
+    function checkAndSend(){
         trigger = true;
         if (formValidation(trigger, websiteWarning, emailWarning)) {
             sendRequest($('#site-url').val(), $('#email-input').val());
         }
+    }
+    $('#test').find('button').on('click', function(){
+        trigger = true;
+        checkAndSend();
     });
     $('#site-url, #email-input').on('keyup',function(){
         if (trigger){
             formValidation(trigger, websiteWarning, emailWarning);
+        }
+        if (event.keyCode == 13) {
+            checkAndSend();
         }
     })
 });
@@ -67,34 +74,29 @@ function sendRequest(site, email) {
         }
     });
 }
-$(".progress div").each(function () {
-    var display = $(this),
-        currentValue = parseInt(display.text()),
-        nextValue = $(this).attr("data-values"),
-        diff = nextValue - currentValue,
-        step = (0 < diff ? 1 : -1);
-    if (nextValue == "0") {
-        $(display).css("padding", "0");
-    } else {
-        $(display).css("color", "transparent").animate({
-            "width": nextValue + "%"
-        }, "slow");
-    }
+$(function showProgressBar() {
+    $(".progress div").each(function () {
+        var display = $(this),
+            currentValue = parseInt(display.text()),
+            nextValue = $(this).attr("data-values"),
+            diff = nextValue - currentValue,
+            step = (0 < diff ? 1 : -1);
+        if (nextValue == "0") {
+            $(display).css("padding", "0");
+        } else {
+            $(display).css("color", "transparent").animate({
+                "width": nextValue + "%"
+            }, "slow");
+        }
 
-    for (var i = 0; i < Math.abs(diff); ++i) {
-        setTimeout(function () {
-            currentValue += step;
-            display.html(currentValue + "%");
-        }, 20 * i);
-    }
+        for (var i = 0; i < Math.abs(diff); ++i) {
+            setTimeout(function () {
+                currentValue += step;
+                display.html(currentValue + "%");
+            }, 20 * i);
+        }
+    });
 });
-// $(window).scroll(function() {
-//     var scrollTop = $(window).scrollTop();
-//     var element = $("#pbar-reputation");
-//     if ( scrollTop > (element.offset().top - element.offset().top/2)) {
-//        console.log("!!!");
-//     }
-// });
 $(function() {
     $.fn.scrollToTop = function() {
         $(this).click(function() {
