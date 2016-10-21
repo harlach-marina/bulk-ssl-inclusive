@@ -45,7 +45,9 @@ function formValidation(trigger, websiteWarning, emailWarning) {
     }
 }
 function checkIfNotEmpty(site) {
-    if (site.length != 0) return true;
+    if (site.length !== 0) {
+        return true;
+    }
 }
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -63,14 +65,13 @@ function sendRequest(site, email) {
             email: encodeURIComponent(email),
             url: encodeURIComponent(site)
         },
-        success: function(data){
-            console.log("success!");
+        success: function(){
             $('#thxModal').modal('show');
             emptyField('#site-url');
             emptyField('#email-input');
         },
         error: function () {
-            console.log("error!");
+            $('#errorModal').modal('show');
         }
     });
 }
@@ -81,7 +82,7 @@ $(function showProgressBar() {
             nextValue = $(this).attr("data-values"),
             diff = nextValue - currentValue,
             step = (0 < diff ? 1 : -1);
-        if (nextValue == "0") {
+        if (nextValue === "0") {
             $(display).css("padding", "0");
         } else {
             $(display).css("color", "transparent").animate({

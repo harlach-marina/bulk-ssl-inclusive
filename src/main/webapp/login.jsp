@@ -217,6 +217,19 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Something went wrong. Try again later</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" autofocus class="btn btn-warning" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery 1.10.2 -->
 <script src="js/jquery-1.10.2.min.js"></script>
 <!-- jQuery Plugins -->
