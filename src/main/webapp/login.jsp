@@ -174,7 +174,7 @@
     <div class="container">
         <article class="row">
             <div class="col-xs-4 col-xs-offset-4 col-md-2 col-md-offset-5">
-                <a class="btn btn-transparent" href="#">Test Now</a>
+                <a class="btn btn-transparent" id='Go_Top' href="#">Test Now</a>
             </div>
         </article>
     </div>
