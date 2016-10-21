@@ -36,10 +36,10 @@
 <section class="text-center" id="section02">
     <div class="container">
         <article class="col-md-8 col-md-offset-2">
-            <h1>We ensure website security</h1>
+            <h1>We ensure internet security</h1>
             <h4>Comprehensive diagnostic and cyber protection of your website</h4>
             <hr>
-            <h3>Find out how well your website it protected</h3>
+            <h3>Find out how well your system is protected</h3>
             <div id="test" class="col-md-8 col-md-offset-2">
                 <div class="form-group">
                     <input id="site-url" autofocus class="form-control" type="url" name="site-url" placeholder="Enter website URL, *" required>
