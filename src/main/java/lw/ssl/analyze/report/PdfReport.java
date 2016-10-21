@@ -125,7 +125,7 @@ public class PdfReport {
     private static class DocumentBuilder {
         private PDDocument doc;
         private PDFont paragraphFont;
-        private static final Integer NEXT_PAGE_THRESHOLD = 200;
+        private static final Integer NEXT_PAGE_THRESHOLD = 250;
         private static final Integer PARAGRAPH_FONT_SIZE = 14;
 
         private static final Integer PARAGRAPH_OFFSET_X = 70;
@@ -344,7 +344,15 @@ public class PdfReport {
                 currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText(s, detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
-                appendText(getHeaderComment(s), detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                if ("X-XSS-Protection".equals(s)) {
+                    appendText("X-XSS-Protection sets the configuration for the cross-site scripting filter built into " +
+                                    "most browsers. ", detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                    currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
+                    appendText("Recommended value \"X-XSS-Protection: 1;mode=block\".",
+                            detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                } else {
+                    appendText(getHeaderComment(s), detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
+                }
             }
             statisticsEntries.put("Security (Web)", percentage);
             setActualContent();
@@ -436,7 +444,6 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             statisticsEntries.put("Security (DNS)", percentage);
-            setActualContent();
             return this;
         }
 
