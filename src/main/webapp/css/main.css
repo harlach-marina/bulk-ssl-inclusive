@@ -4,7 +4,7 @@ input.form-control {
 button {
 	outline: none;
 }
- #section00 {
+#section00 {
 	height: 80px;
 	text-align: center;
 	padding: 10px 0;
@@ -20,7 +20,7 @@ button {
 	background: url('../img/header.png') scroll center no-repeat;
 	color: #fff;
 	min-height:580px;
-	height: calc(100vh - 80px);
+	height: calc(100vh - 120px);
 	background-size: cover;
 }
 
@@ -161,6 +161,9 @@ button {
 	font-weight: bold;
 	padding-right: 0;
 }
+#section02 .btn-transparent {
+	margin-top: 15px;
+}
 .btn-transparent {
 	background-color: transparent;
 	border: 1px solid #fff;
@@ -188,7 +191,7 @@ button {
 
 @media (max-width: 767px) {
 	#section00 {
-		height: 140px;
+		height: 80px;
 		padding: 10px 0;
 	}
 	#section01 {
@@ -196,10 +199,18 @@ button {
 	}
 	#section02 {
 		min-height:480px;
-		height: calc(100vh - 240px);
+		height: calc(100vh - 200px);
 	}
 	#test input.form-control {
 		width: 80%;
 	}
 
+}
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px)  and (-webkit-min-device-pixel-ratio : 2) {
+	#section02 h1 {
+		font-size: 25px;
+	}
+	#section02 h4 {
+		display: none;
+	}
 }

@@ -17,7 +17,7 @@
 <body>
 <header id="section00">
     <div class="container">
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+        <div class="hidden-xs col-sm-6 col-md-6 col-lg-4">
             <img src="img/icon-left.png">
         </div>
         <div class="col-xs-12 col-sm-6 col-sm-offset-0 col-md-6 col-md-offset-0 col-lg-4 col-lg-offset-4">
@@ -42,7 +42,7 @@
             <h3>Find out how well your website it protected</h3>
             <div id="test" class="col-md-8 col-md-offset-2">
                 <div class="form-group">
-                    <input id="site-url" class="form-control" type="url" name="site-url" placeholder="Enter website*, started with http:// or https://" required>
+                    <input id="site-url" class="form-control" type="url" name="site-url" placeholder="http:// or https://, *" required>
                     <div class="hidden form-control-feedback-url">Required field cannot be left blank</div>
                 </div>
                 <div class="form-group">
@@ -174,7 +174,7 @@
     <div class="container">
         <article class="row">
             <div class="col-xs-4 col-xs-offset-4 col-md-2 col-md-offset-5">
-                <a class="btn btn-transparent" href="#">Test Now</a>
+                <a class="btn btn-transparent" id='Go_Top' href="#">Test Now</a>
             </div>
         </article>
     </div>
