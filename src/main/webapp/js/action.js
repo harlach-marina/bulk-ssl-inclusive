@@ -32,6 +32,10 @@ function formValidation(trigger, websiteWarning, emailWarning) {
     } else if (!checkIfNotEmpty(website)) {
         websiteWarning.text(ifEmpty).removeClass('hidden');
     }
+
+    if (validateEmail(email) && checkIfNotEmpty(website)) {
+        return true;
+    }
 }
 function checkIfNotEmpty(site) {
     if (site.length != 0) return true;
@@ -84,6 +88,13 @@ $(".progress div").each(function () {
         }, 20 * i);
     }
 });
+// $(window).scroll(function() {
+//     var scrollTop = $(window).scrollTop();
+//     var element = $("#pbar-reputation");
+//     if ( scrollTop > (element.offset().top - element.offset().top/2)) {
+//        console.log("!!!");
+//     }
+// });
 $(function() {
     $.fn.scrollToTop = function() {
         $(this).click(function() {
