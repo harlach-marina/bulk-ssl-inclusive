@@ -35,17 +35,21 @@ public final class SecurityHeadersUtil {
     private static final String CERTIFICATE_NAME = "schd.io";
     private static final String CERTIFICATE_PATH = "/schd.io.crt"; // real path: src/main/resources/schd.io.crt
     private static final Long REQUEST_REPEATING_INTERVAL = 1000L;
+    private static final Integer REQUESTS_COUNT = 10;
 
     private SecurityHeadersUtil() {
     }
 
-    public static SecurityHeadersResults getStatistics(String urlToCheck) {
+    public static SecurityHeadersResults getStatistics(String urlToCheck, Integer count) {
         System.out.println("Security headers scanning started!");
         importCertificate();
         Document doc = Jsoup.parse(sendRequestForResult(urlToCheck));
         Elements headersTable = doc.select(".pillList");
         Elements greenHeaders = headersTable.select(".headerItem.pill.pill-green");
         Elements redHeaders = headersTable.select(".headerItem.pill.pill-red");
+        if (count > REQUESTS_COUNT) {
+            return new SecurityHeadersResults();
+        }
         if (redHeaders.isEmpty() && greenHeaders.isEmpty()) {
             System.out.println("Security headers check failed!");
             try {
@@ -53,7 +57,7 @@ public final class SecurityHeadersUtil {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return getStatistics(urlToCheck);
+            return getStatistics(urlToCheck, ++count);
         }
         SecurityHeadersResults results = new SecurityHeadersResults();
         for (Element element : redHeaders) {

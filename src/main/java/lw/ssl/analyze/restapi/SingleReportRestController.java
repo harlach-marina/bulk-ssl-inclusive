@@ -63,7 +63,7 @@ public class SingleReportRestController {
                 });
                 tlsCheckThread.start();
                 VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url);
-                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url);
+                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url, 0);
                 DnsSecAnalyzerResults dnsSecAnalyzerResults = DnsSecAnalyzerUtil.getStatistics(url);
 
                 sslLabsThread.join();

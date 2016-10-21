@@ -38,7 +38,7 @@ public class PdfReport {
                             builder.communicationCertOkPercentage,
                             builder.communicationTlsNegPercentage)
                     .compliance(builder.isCompliant)
-                    .securityWeb(builder.securityWebBadHeaders, builder.securityWebTotalBadHeaders)
+                    .securityWeb(builder.securityWebBadHeaders, builder.securityWebPercentage)
                     .confidentiality(builder.confidentialityCertificateValidity,
                             builder.confidentialityProtocolPercentage,
                             builder.confidentialityKeyPercentage,
@@ -66,7 +66,7 @@ public class PdfReport {
         private Boolean isCompliant;
 
         private List<String> securityWebBadHeaders;
-        private Integer securityWebTotalBadHeaders;
+        private Integer securityWebPercentage;
 
         private Set<String> dnsSecAnalyzerRedResults;
         private Integer securityDnsPercentage;
@@ -106,7 +106,8 @@ public class PdfReport {
 
         public PdfReportBuilder securityHeadersResults(SecurityHeadersResults securityHeadersResults) {
             securityWebBadHeaders = securityHeadersResults.getRedHeaders();
-            securityWebTotalBadHeaders = SecurityHeadersResults.MAX_RED_HEADERS;
+            securityWebPercentage = securityHeadersResults.getGreenHeaders().isEmpty() ? 15 :
+                    100 - (100 / SecurityHeadersResults.MAX_RED_HEADERS * securityHeadersResults.getRedHeaders().size());
             return this;
         }
 
@@ -269,13 +270,17 @@ public class PdfReport {
             appendText("Communication", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
             currentOffsetY -= DETAILS_OFFSET_Y;
             Integer communicationPercentage = (tlsAdvPercents + certOkPercents + tlsNegPercents) / 3;
+            if (communicationPercentage < 15) {
+                communicationPercentage = 15;
+            }
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, communicationPercentage);
-            currentOffsetY -= DETAILS_OFFSET_Y;
             if (communicationPercentage == 100) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("Communication check didn't detect any problems.", detailsFont, DETAILS_FONT_SIZE,
                         DETAILS_OFFSET_X, currentOffsetY);
             }
             if (tlsAdvPercents < 100) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("TLS Adv", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
                 appendText("Without TLS your data in motion such as passwords, emails, VoIP or credit card " +
@@ -283,6 +288,7 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             if (certOkPercents < 100) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("Cert OK", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
                 appendText("An expired certificate means there is a risk of Man in the middle attack, " +
@@ -290,6 +296,7 @@ public class PdfReport {
                         detailsFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY);
             }
             if (tlsNegPercents < 100) {
+                currentOffsetY -= DETAILS_OFFSET_Y;
                 appendText("TLS Neg", detailsBoldFont, DETAILS_FONT_SIZE, DETAILS_OFFSET_X, currentOffsetY, COLOR_RED);
                 currentOffsetY -= DETAILS_SMALL_OFFSET_Y;
                 appendText("Checks to ensure Email transmission is encrypted and secure from eavesdroppers.",
@@ -320,14 +327,13 @@ public class PdfReport {
             return this;
         }
 
-        private DocumentBuilder securityWeb(List<String> redHeaders, Integer maxRedHeadersCount) throws IOException {
-            if (redHeaders == null || maxRedHeadersCount == null) {
+        private DocumentBuilder securityWeb(List<String> redHeaders, Integer percentage) throws IOException {
+            if (redHeaders == null || percentage == null) {
                 return this;
             }
             currentOffsetY -= PARAGRAPH_OFFSET_Y;
             appendText("Security (WEB)", paragraphFont, PARAGRAPH_FONT_SIZE, PARAGRAPH_OFFSET_X, currentOffsetY);
             currentOffsetY -= DETAILS_OFFSET_Y;
-            Integer percentage = 100 - (100 / maxRedHeadersCount * redHeaders.size());
             appendPercentageLine(DETAILS_OFFSET_X, currentOffsetY, percentage);
             if (redHeaders.isEmpty()) {
                 currentOffsetY -= DETAILS_OFFSET_Y;
