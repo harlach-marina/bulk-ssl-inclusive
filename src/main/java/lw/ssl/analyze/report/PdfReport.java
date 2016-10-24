@@ -93,9 +93,11 @@ public class PdfReport {
         }
 
         public PdfReportBuilder tlsCheckResults(TlsCheckResults tlsCheckResults) {
-            communicationTlsAdvPercentage = tlsCheckResults.getTlsAdvPercents();
-            communicationCertOkPercentage = tlsCheckResults.getCertOkPercents();
-            communicationTlsNegPercentage = tlsCheckResults.getTlsNegPercents();
+            if (tlsCheckResults != null) {
+                communicationTlsAdvPercentage = tlsCheckResults.getTlsAdvPercents();
+                communicationCertOkPercentage = tlsCheckResults.getCertOkPercents();
+                communicationTlsNegPercentage = tlsCheckResults.getTlsNegPercents();
+            }
             return this;
         }
 
@@ -123,32 +125,22 @@ public class PdfReport {
     }
 
     private static class DocumentBuilder {
-        private PDDocument doc;
-        private PDFont paragraphFont;
         private static final Integer NEXT_PAGE_THRESHOLD = 250;
         private static final Integer PARAGRAPH_FONT_SIZE = 14;
-
         private static final Integer PARAGRAPH_OFFSET_X = 70;
         private static final Integer PARAGRAPH_OFFSET_Y = 50;
-
-        private PDFont detailsFont;
-        private PDFont detailsBoldFont;
-        private PDFont warningFont;
         private static final Integer DETAILS_FONT_SIZE = 8;
-        private static final Integer DETAILS_OFFSET_X = 130;
+        private static final Integer DETAILS_OFFSET_X = 140;
         private static final Integer DETAILS_OFFSET_Y = 20;
         private static final Integer DETAILS_SMALL_OFFSET_Y = 10;
-
         private static final Integer SUMMARY_BAR_HEIGHT = 120;
         private static final Integer SUMMARY_BAR_WIDTH = 350;
         private static final Float SUMMARY_BAR_LINES_WIDTH = 0.3F;
         private static final Integer SUMMARY_BAR_LINES_COUNT = 10;
         private static final Integer SUMMARY_METRIC_MARGIN = 18;
         private static final Integer SUMMARY_BAR_FONT_SIZE = 6;
-
         private static final Float PERCENTAGE_LINE_HEIGHT = 10F;
         private static final Float PERCENTAGE_LINE_WIDTH = 380F;
-
         private static final Color COLOR_BLACK = new Color(4, 4, 4);
         private static final Color COLOR_VERY_LIGHT_GRAY = new Color(246, 246, 246);
         private static final Color COLOR_LIGHT_GRAY = new Color(237, 237, 237);
@@ -157,7 +149,11 @@ public class PdfReport {
         private static final Color COLOR_YELLOW = new Color(255, 230, 23);
         private static final Color COLOR_ORANGE = new Color(255, 165, 24);
         private static final Color COLOR_GREEN = new Color(77, 186, 5);
-
+        private PDDocument doc;
+        private PDFont paragraphFont;
+        private PDFont detailsFont;
+        private PDFont detailsBoldFont;
+        private PDFont warningFont;
         private PDPageContentStream content;
         private Integer pageHeight;
         private Integer pageWidth;
@@ -313,7 +309,7 @@ public class PdfReport {
                     appendDetailsTextWithSmallOffset("X-XSS-Protection sets the configuration for the cross-site " +
                             "scripting filter built into most browsers. ");
                     appendDetailsTextWithSmallOffset("Recommended value \"X-XSS-Protection: 1;mode=block\".");
-                } else {
+                } else if (!"".equals(getHeaderComment(s))) {
                     appendDetailsTextWithSmallOffset(getHeaderComment(s));
                 }
             }
@@ -500,8 +496,12 @@ public class PdfReport {
                             "most browsers. Recommended value \"X-XSS-Protection: 1;mode=block\".";
                 case "X-Content-Type-Options":
                     return "Your site isn't preventing an attacker from typing to MIME-sniff the content.";
+                case "Strict-Transport-Security":
+                    return "";
+                case "Public-Key-Pins":
+                    return "Your site's identity is not certain";
             }
-            return "We have no info about this header. Check it on www.securityheaders.com .";
+            return "";
         }
 
         private Color getColorByPercentage(Integer percentage) {

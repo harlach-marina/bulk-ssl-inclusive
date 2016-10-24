@@ -23,11 +23,12 @@ public final class VirusTotalUtil {
     private static final String API_URL = "https://www.virustotal.com/vtapi/v2/url/";
     private static final Long REQUEST_REPEATING_INTERVAL = 10000L;
     private static final String SCAN_REPORT_SUCCESSFUL_MESSAGE = "Scan finished, scan information embedded in this object";
+    private static final Integer MAX_ITERATIONS_COUNT = 10;
 
     private VirusTotalUtil() {
     }
 
-    public static VirusTotalResults getStatistics(String urlToCheck) {
+    public static VirusTotalResults getStatistics(String urlToCheck, Integer iteration) {
         try {
             System.out.println("Virus total scanning started!");
             sendRequestForScan(urlToCheck);
@@ -35,7 +36,7 @@ public final class VirusTotalUtil {
             JSONObject scanResults = sendRequestForResults(urlToCheck);
             if (!SCAN_REPORT_SUCCESSFUL_MESSAGE.equals(scanResults.optString("verbose_msg"))) {
                 System.out.println("Virus total error!");
-                return getStatistics(urlToCheck);
+                return getStatistics(urlToCheck, ++iteration);
             } else {
                 System.out.println("Virus total scanning finished!");
                 return new VirusTotalResults(scanResults.optJSONObject("scans"));

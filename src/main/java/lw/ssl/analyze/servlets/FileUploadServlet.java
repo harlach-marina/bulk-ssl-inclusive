@@ -207,7 +207,7 @@ public class FileUploadServlet extends HttpServlet {
                         "" : ":" + webResourceDescription.getPort());
 
                 //NEW CODE
-                VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(urlToCheck);
+                VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(urlToCheck, 0);
                 SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(urlToCheck, 0);
                 //-- NEW CODE
                 System.out.println("Analize url:" + webResourceDescription.getHost());

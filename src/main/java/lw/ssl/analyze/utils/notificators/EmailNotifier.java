@@ -21,6 +21,14 @@ public class EmailNotifier {
     private static final String RESULTS = "results";
     private static final String PATTERN = "yyyy.MM.dd_HH.mm.ss";
 
+    public static void notify(String subject, String message, String mailTo) {
+        if (StringUtils.isNotBlank(mailTo)) {
+            notify(subject, mailTo, message, null, null, false);
+        } else {
+            System.out.println("Excel report wasn't sent - report or receiver is null");
+        }
+    }
+
     public static  void notifyWithAttachment(ByteArrayOutputStream attachments, FileExtension fileExtension,
                                              String subject, String mailTo) {
         if (StringUtils.isNotBlank(mailTo)) {
