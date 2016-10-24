@@ -60,15 +60,16 @@ public class SslLabsResults {
      * Page 5
      */
     public Long getSummaryProtocolSupport() {
-        return isProtocolSupported(Protocol.SSL_3)
-                ? isProtocolSupported(Protocol.TLS_1_0)
-                ? isProtocolSupported(Protocol.TLS_1_1)
-                ? isProtocolSupported(Protocol.TLS_1_2)
-                ? 100L
-                : 95
-                : 90
-                : 80
-                : 0;
+        if (isProtocolSupported(Protocol.SSL_3)) {
+            return 80L;
+        } else if (isProtocolSupported(Protocol.TLS_1_0)) {
+            return 90L;
+        } else if (isProtocolSupported(Protocol.TLS_1_1)) {
+            return 95L;
+        } else if (isProtocolSupported(Protocol.TLS_1_2)) {
+            return 100L;
+        }
+        return 0L;
     }
 
     private Boolean isProtocolSupported(Protocol protocol) {
@@ -127,7 +128,7 @@ public class SslLabsResults {
     }
 
     public Boolean isRc4Supported(){
-        return endpoints.stream().filter(e -> e.getDetails().getSupportsRc4()).count() > 0;
+        return endpoints.stream().filter(e -> e.getDetails().getSupportsRc4()).count() == 0;
     }
 
     public String getHostName() {

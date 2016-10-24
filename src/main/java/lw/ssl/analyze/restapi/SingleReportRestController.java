@@ -30,22 +30,31 @@ import java.util.Date;
 public class SingleReportRestController {
 
     private static final String REPORT_SUBJECT = "Analysis results.";
-  //  private static final String SUCCESS_MESSAGE = "Report will be sent to your email";
 
     @GET
-    public Response getReport(@QueryParam("email") String email,
-                              @QueryParam("url") String url){
+    public Response getReport(@QueryParam("emailForReport") String emailForReport,
+                              @QueryParam("emailForCheck") String emailForCheck,
+                              @QueryParam("url") String url) {
         try {
-            startThreads(URLDecoder.decode(email, "UTF-8"),
-                    URLDecoder.decode(url, "UTF-8"));
-            return Response.status(200).build();
+            if (emailForReport != null && url != null) {
+                if (emailForCheck == null) {
+                    startThreads(URLDecoder.decode(emailForReport, "UTF-8"),
+                            null,
+                            URLDecoder.decode(url, "UTF-8"));
+                } else {
+                    startThreads(URLDecoder.decode(emailForReport, "UTF-8"),
+                            URLDecoder.decode(emailForCheck, "UTF-8"),
+                            URLDecoder.decode(url, "UTF-8"));
+                }
+                return Response.status(200).build();
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return Response.status(400).build();
     }
 
-    private void startThreads(String email, String url) {
+    private void startThreads(String emailForReport, String emailForCheck, String url) {
         Thread maimThread = new Thread(() -> {
             System.out.println("Analysis started at " + new Date() + "!");
             try {
@@ -59,11 +68,13 @@ public class SingleReportRestController {
                 });
                 sslLabsThread.start();
                 Thread tlsCheckThread = new Thread(() -> {
-                    totalScanResults.setTlsCheckResults(TlsCheckUtil.getStatistics(email));
+                    totalScanResults.setTlsCheckResults(TlsCheckUtil.getStatistics(emailForCheck));
                 });
-                tlsCheckThread.start();
-                VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url);
-                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url);
+                if (emailForCheck != null) {
+                    tlsCheckThread.start();
+                }
+                VirusTotalResults virusTotalResults = VirusTotalUtil.getStatistics(url, 0);
+                SecurityHeadersResults securityHeadersResults = SecurityHeadersUtil.getStatistics(url, 0);
                 DnsSecAnalyzerResults dnsSecAnalyzerResults = DnsSecAnalyzerUtil.getStatistics(url);
 
                 sslLabsThread.join();
@@ -77,9 +88,10 @@ public class SingleReportRestController {
                         .build();
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 pdfReport.getDocument().save(byteArrayOutputStream);
-                EmailNotifier.notifyWithAttachment(byteArrayOutputStream, FileExtension.PDF, REPORT_SUBJECT, email);
+                EmailNotifier.notifyWithAttachment(byteArrayOutputStream, FileExtension.PDF, REPORT_SUBJECT, emailForReport);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+                EmailNotifier.notify("Analysis report error", e.getMessage(), emailForReport);
             }
             System.out.println("Analysis finished at " + new Date() + "!");
         });

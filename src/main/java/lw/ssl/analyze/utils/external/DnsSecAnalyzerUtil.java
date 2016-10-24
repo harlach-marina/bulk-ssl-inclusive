@@ -31,7 +31,9 @@ public final class DnsSecAnalyzerUtil {
 
     public static DnsSecAnalyzerResults getStatistics(String urlToCheck) {
         System.out.println("DNSSEC scanning started!");
-        String urlToSend = urlToCheck.replaceAll("https://", "").replaceAll("http://", "");
+        String urlToSend = urlToCheck.replaceAll("https://", "")
+                .replaceAll("http://", "")
+                .replaceAll("/", "");
         Document doc = Jsoup.parse(sendRequestForResult(urlToSend));
         Elements elements = doc.select(".T1 > tbody > tr:last-child").select("tr.L0");
         Set<String> redResults = new TreeSet<>();
