@@ -46,7 +46,7 @@
                     <div class="hidden form-control-feedback-url">Required field cannot be left blank</div>
                 </div>
                 <div class="form-group">
-                    <input id="email-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autocomplete="off" required>
+                    <input id="email-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autocomplete="off">
                     <div class="hidden form-control-feedback-email">Please enter a valid email</div>
                 </div>
                 <button class="btn btn-transparent" type="submit">Test Now</button>
@@ -209,7 +209,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <%--<h4 class="modal-title" id="testModalLabel">Thank you! Wait for several minutes and check your email, please.</h4>--%>
+                <h4 class="modal-title" id="testModalLabel">Please enter email for receive a report</h4>
             </div>
             <div class="modal-body">
                 <form>
