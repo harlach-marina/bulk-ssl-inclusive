@@ -204,6 +204,34 @@
         </div>
     </div>
 </footer>
+<div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="testModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%--<h4 class="modal-title" id="testModalLabel">Thank you! Wait for several minutes and check your email, please.</h4>--%>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <input id="email2-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autofocus autocomplete="off" required>
+                        <div class="hidden form-control-feedback-email">Please enter a valid email</div>
+                    </div>
+                    <div class="form-group text-left hidden" id="checkbox-input">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Use the same email
+                            </label>
+                        </div>
+                    </div>
+
+                </form>
+                <button class="btn btn-border-blue">Test Now</button>
+                <%--<button type="button" autofocus class="btn btn-primary" data-dismiss="modal">OK</button>--%>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="thxModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">

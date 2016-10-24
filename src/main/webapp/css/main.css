@@ -47,17 +47,21 @@ button {
 #section03 {
 	padding-bottom: 60px;
 }
-#test input.form-control {
+
+input.form-control {
 	width: 300px;
 	margin: 15px auto 0 auto;
 }
-#test .form-control-feedback-url,
-#test .form-control-feedback-email {
-	width: 300px;
+.form-control-feedback-url,
+.form-control-feedback-email {
 	background-color: #d34c59;
 	padding: 2px 12px;
 	text-align: left;
 	margin: auto;
+}
+.form-control-feedback-url,
+.form-control-feedback-email {
+	width: 300px;
 }
 #section04 {
 	background-color: #01397c;
@@ -112,9 +116,6 @@ button {
 .modal-header .modal-title {
 	font-weight: bold;
 }
-.modal-body form input {
-	margin-bottom: 15px;
-}
 .modal-body form button {
 	font-weight: bold;
 }
@@ -135,6 +136,7 @@ button {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
+	width: 350px;
 }
 
 .progress {
@@ -156,6 +158,10 @@ button {
 #pbar-communication b{
 	color: #f23e53;
 	font-weight: bold;
+}
+.progress-bar {
+	-webkit-transition: none !important;
+	transition: none !important;
 }
 #pbar-confidentiality .col-md-2 {
 	font-weight: bold;
@@ -201,7 +207,7 @@ button {
 		min-height:480px;
 		height: calc(100vh - 200px);
 	}
-	#test input.form-control {
+	input.form-control {
 		width: 80%;
 	}
 
