@@ -19,7 +19,7 @@ $(document).ready(function() {
             $('#testModal').modal('show');
             if (email) {
                 $('#email2-input').val(email).attr({'disabled': true});
-                $('#checkbox-input').find('input').attr('checked', true);
+                $('#checkbox-input').find('input').attr({'checked': true});
                 $('#checkbox-input').removeClass('hidden');
             }
         }
@@ -85,7 +85,7 @@ function emptyModalWindow(window) {
     emptyField(window.find('#email2-input'));
     window.find('#email2-input').attr({'disabled': false});
     window.find('.form-control-feedback-email').addClass('hidden');
-    window.find('#checkbox-input').attr('checked', false).addClass('hidden');
+    window.find('#checkbox-input').attr({'checked': false}).addClass('hidden');
 }
 function emptyTestForm() {
     emptyField($('#site-url'));
