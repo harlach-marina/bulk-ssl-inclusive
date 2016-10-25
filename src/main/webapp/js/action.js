@@ -32,7 +32,17 @@ $(document).ready(function() {
     }
     //action on open modal window
     $('#testModal').on('shown.bs.modal', function () {
-        $('#email2-input').focus();
+        if($('#email2-input').is(':disabled')){
+            $('#testModal').find('.modal-body button').focus();
+        } else {
+            $('#email2-input').focus();
+        }
+    });
+    $('#errorModal').on('shown.bs.modal', function () {
+        $('#errorModal').find('.modal-body button').focus();
+    });
+    $('#thxModal').on('shown.bs.modal', function () {
+        $('#thxModal').find('.modal-body button').focus();
     });
     //action on close modal window
     $('#testModal').on('hidden.bs.modal', function () {

@@ -240,7 +240,7 @@
                 <h4 class="modal-title" id="warningModalLabel">Thank you! Wait for several minutes and check your email, please.</h4>
             </div>
             <div class="modal-body">
-                <button type="button" autofocus class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -253,7 +253,7 @@
                 <h4 class="modal-title">Something went wrong. Try again later</h4>
             </div>
             <div class="modal-body">
-                <button type="button" autofocus class="btn btn-warning" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
