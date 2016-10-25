@@ -35,6 +35,8 @@ $(document).ready(function() {
     $('#testModal').on('hide.bs.modal', function () {
         emptyModalWindow($(this));
         emptyTestForm();
+        trigger = false;
+        trigger2 = false;
     });
     //bind checkbox and email field
     $('#checkbox-input').find('input').on('change', function () {
@@ -84,6 +86,8 @@ function emptyModalWindow(window) {
 function emptyTestForm() {
     emptyField($('#site-url'));
     emptyField($('#email-input'));
+    $('#test').find('.form-control-feedback-email').addClass('hidden');
+    $('#test').find('.form-control-feedback-url').addClass('hidden');
 }
 //check email for report input
 function checkEmailForReport(emailWarning, ifEmpty, invalidEmail) {
@@ -101,7 +105,7 @@ function checkEmailForReport(emailWarning, ifEmpty, invalidEmail) {
 function formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail) {
     var website = $('#site-url').val();
     var email = $('#email-input').val();
-    if (validateEmail(email)) {
+    if (validateEmail(email) || !checkIfNotEmpty(email)) {
         emailWarning.addClass('hidden');
     } else if (checkIfNotEmpty(email) && !validateEmail(email)) {
         emailWarning.text(invalidEmail).removeClass('hidden');
