@@ -214,7 +214,7 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <input id="email2-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autofocus autocomplete="off" required>
+                        <input id="email2-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autocomplete="off" required>
                         <div class="hidden form-control-feedback-email">Please enter a valid email</div>
                     </div>
                     <div class="form-group text-left hidden" id="checkbox-input">

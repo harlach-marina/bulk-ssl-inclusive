@@ -30,13 +30,17 @@ $(document).ready(function() {
             sendRequest(website, email, $('#email2-input').val());
         }
     }
-
+    //action on open modal window
+    $('#testModal').on('shown.bs.modal', function () {
+        $('#email2-input').focus();
+    });
     //action on close modal window
-    $('#testModal').on('hide.bs.modal', function () {
+    $('#testModal').on('hidden.bs.modal', function () {
         emptyModalWindow($(this));
         emptyTestForm();
         trigger = false;
         trigger2 = false;
+        $("#site-url").focus();
     });
     //bind checkbox and email field
     $('#checkbox-input').find('input').on('change', function () {
