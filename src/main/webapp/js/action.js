@@ -14,7 +14,7 @@ $(document).ready(function() {
     //validate site and email
     function checkTestForm(){
         if (formValidation(websiteWarning, emailWarning)) {
-            website = formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail).website;
+            website = formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail).website.trim();
             email = formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail).email;
             $('#testModal').modal('show');
             if (email) {
