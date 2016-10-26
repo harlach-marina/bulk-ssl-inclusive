@@ -12,14 +12,14 @@ $(document).ready(function() {
     var website;
     var email;
     //validate site and email
-    function checkAndSend(){
+    function checkTestForm(){
         if (formValidation(websiteWarning, emailWarning)) {
             website = formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail).website;
             email = formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail).email;
             $('#testModal').modal('show');
             if (email) {
                 $('#email2-input').val(email).attr({'disabled': true});
-                $('#checkbox-input').find('input').attr({'checked': true});
+                $('#checkbox-input').find('input').prop({'checked': true});
                 $('#checkbox-input').removeClass('hidden');
             }
         }
@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
     $('#test').find('button').on('click', function(){
         trigger = true;
-        checkAndSend();
+        checkTestForm();
     });
     //actions on key press
     $('#site-url, #email-input').on('keyup',function(){
@@ -77,7 +77,7 @@ $(document).ready(function() {
         }
         //on press enter
         if (event.keyCode == 13) {
-            checkAndSend();
+            checkTestForm();
         }
     });
     $('#email2-input').on('keyup',function(){
@@ -95,7 +95,8 @@ function emptyModalWindow(window) {
     emptyField(window.find('#email2-input'));
     window.find('#email2-input').attr({'disabled': false});
     window.find('.form-control-feedback-email').addClass('hidden');
-    window.find('#checkbox-input').attr({'checked': false}).addClass('hidden');
+    window.find('input').prop({'checked': false});
+    window.find('#checkbox-input').addClass('hidden');
 }
 function emptyTestForm() {
     emptyField($('#site-url'));
