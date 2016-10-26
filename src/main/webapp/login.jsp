@@ -35,12 +35,12 @@
 <%--</section>--%>
 <section class="text-center" id="section02">
     <div class="container">
-        <article class="col-md-8 col-md-offset-2">
+        <article class="col-xs-12 col-xs-offset-0 col-md-8 col-md-offset-2">
             <h1>We ensure internet security</h1>
             <h4>Comprehensive diagnostic and cyber protection of your website</h4>
             <hr>
             <h3>Find out how well your system is protected</h3>
-            <div id="test" class="col-md-8 col-md-offset-2">
+            <div id="test" class="col-xs-12 col-xs-offset-0 col-md-8 col-md-offset-2">
                 <div class="form-group">
                     <input id="site-url" autofocus class="form-control" type="url" name="site-url" placeholder="Enter website URL, *" required>
                     <div class="hidden form-control-feedback-url">Required field cannot be left blank</div>
@@ -57,16 +57,16 @@
 <section id="section03">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Get a detailed report about your digital business</h2>
                 <h4>Digital Security Scanner Measurement</h4>
                 <img class="img-responsive" src="img/chart.png">
             </div>
         </div>
         <div class="row">
-            <div id="pbar-reputation" class="col-md-10 col-md-offset-1">
+            <div id="pbar-reputation" class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Reputation</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-info" data-values="48">0</div>
                     </div>
@@ -74,9 +74,9 @@
                     <p>Search engines such as Google may notify your users to avoid using your site because it contains malware or other threats.</p>
                 </div>
             </div>
-            <div id="pbar-communication" class="col-md-10 col-md-offset-1">
+            <div id="pbar-communication" class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Communication</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-warning" data-values="68">0</div>
                     </div>
@@ -84,18 +84,18 @@
                     <p>Checks to ensure Email transmission is encrypted and secure from  eavesdroppers.</p>
                 </div>
             </div>
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Compliance</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-info" data-values="40">0</div>
                     </div>
                     <b>For your business to be PCI Compliant, you need to stop running SSL 2.0, SSL 3.0 or TLS 1.0. Reconfigure or upgrade to TLS 1.2.</b>
                 </div>
             </div>
-            <div id="pbar-security" class="col-md-10 col-md-offset-1">
+            <div id="pbar-security" class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Security (Web)</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="8">0</div>
                     </div>
@@ -109,58 +109,58 @@
                     <p>Your site isn't preventing an attacker from trying to MIME-sniff the content.</p>
                 </div>
             </div>
-            <div id="pbar-confidentiality" class="col-md-10 col-md-offset-1">
+            <div id="pbar-confidentiality" class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Confidentiality</h2>
-                <div class="col-md-2">Certificate</div>
-                <div class="col-md-10">
+                <div class="col-xs-8 col-md-2">Certificate</div>
+                <div class="col-xs-12 col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="15">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">Protocol Support</div>
-                <div class="col-md-10">
+                <div class="col-xs-8 col-md-2">Protocol Support</div>
+                <div class="col-xs-12 col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-info" data-values="24">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">Key Exchange</div>
-                <div class="col-md-10">
+                <div class="col-xs-8 col-md-2">Key Exchange</div>
+                <div class="col-xs-12 col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-warning" data-values="51">0</div>
                     </div>
                 </div>
-                <div class="col-md-2">Cipher Strength</div>
-                <div class="col-md-10">
+                <div class="col-xs-8 col-md-2">Cipher Strength</div>
+                <div class="col-xs-12 col-md-10">
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="10">0</div>
                     </div>
                 </div>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <p>Your site uses expired or not trusted certificate.</p>
                     <p>Your site support old or nonsecure protocols.</p>
                     <p>Your site is insecure as a result of  SSL handshake failure.</p>
                 </div>
             </div>
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Integrity</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-danger" data-values="18">0</div>
                     </div>
                     <p>Your site is not using strong cipher</p>
                 </div>
             </div>
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Availability</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-success" data-values="98">0</div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-1">
                 <h2>Security (DNS)</h2>
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-xs-12 col-xs-offset-0 col-md-10 col-md-offset-2">
                     <div class="progress">
                         <div class="progress-bar progress-bar-success" data-values="80">0</div>
                     </div>

@@ -209,8 +209,14 @@ input.form-control {
 		min-height:480px;
 		height: calc(100vh - 200px);
 	}
-	input.form-control {
-		width: 80%;
+	input.form-control,
+	.form-control-feedback-url,
+	.form-control-feedback-email{
+		width: 100%;
+	}
+	.form-control-feedback-url,
+	.form-control-feedback-email {
+		white-space: nowrap;
 	}
 
 }
