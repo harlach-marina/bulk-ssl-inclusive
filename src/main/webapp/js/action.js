@@ -70,23 +70,25 @@ $(document).ready(function() {
         checkTestForm();
     });
     //actions on key press
-    $('#site-url, #email-input').on('keyup',function(){
+    $('#site-url, #email-input').on('keyup',function(event){
         //on change input if test button was clicked
         if (trigger){
             formValidation(websiteWarning, emailWarning, ifEmpty, invalidEmail);
         }
         //on press enter
         if (event.keyCode == 13) {
+            trigger = true;
             checkTestForm();
         }
     });
-    $('#email2-input').on('keyup',function(){
+    $('#email2-input').on('keyup',function(event){
         //on change input if test button was clicked
         if (trigger2){
             checkEmailForReport(email2Warning, ifEmpty, invalidEmail);
         }
         //on press enter
         if (event.keyCode == 13) {
+            trigger2 = true;
             send();
         }
     })
