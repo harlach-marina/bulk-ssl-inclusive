@@ -45,7 +45,7 @@ $(document).ready(function() {
         $('#thxModal').find('.modal-body button').focus();
     });
     //action on close modal window
-    $('#testModal').on('hidden.bs.modal', function () {
+    $('.modal').on('hidden.bs.modal', function () {
         emptyModalWindow($(this));
         emptyTestForm();
         trigger = false;

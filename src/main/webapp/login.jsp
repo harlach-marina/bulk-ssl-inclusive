@@ -212,7 +212,7 @@
                 <h4 class="modal-title" id="testModalLabel">Please enter your email to receive a report</h4>
             </div>
             <div class="modal-body">
-                <form>
+                <div class="form">
                     <div class="form-group">
                         <input id="email2-input" class="form-control" type="email" name="email" placeholder="E-mail, *" autocomplete="off" required>
                         <div class="hidden form-control-feedback-email">Please enter a valid email</div>
@@ -224,8 +224,8 @@
                             </label>
                         </div>
                     </div>
+                </div>
 
-                </form>
                 <button class="btn btn-border-blue">Test Now</button>
                 <%--<button type="button" autofocus class="btn btn-primary" data-dismiss="modal">OK</button>--%>
             </div>

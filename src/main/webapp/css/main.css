@@ -31,7 +31,7 @@ button {
 #section02 article h3 {
 	padding-top: 5%;
 }
-#test, #section03, #testModal form {
+#test, #section03, #testModal .form {
 	font-family: 'Lato', sans-serif;
 }
 #section02 article{
@@ -118,7 +118,7 @@ input.form-control {
 .modal-header .modal-title {
 	font-weight: bold;
 }
-.modal-body form button {
+.modal-body .form button {
 	font-weight: bold;
 }
 .modal {
