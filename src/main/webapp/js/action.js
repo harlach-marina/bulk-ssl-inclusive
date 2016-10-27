@@ -209,23 +209,6 @@ $(function showProgressBar() {
         }
     });
 });
-// var abc = "80%";
-//
-// $(window).scroll(function() {
-//     var scrollTop = $(window).scrollTop();
-//     var element = $("#pbar-reputation").find('.progress-bar');
-//     if ( scrollTop > (element.offset().top - element.offset().top/2)) {
-//         $(function (element) {
-//             console.log(element.attr('data-values'));
-//             $(".progress-bar").animate({
-//                 width: abc
-//             }, 2500);
-//         })
-//
-//     }
-// });
-
-
 $(function() {
     $.fn.scrollToTop = function() {
         $(this).click(function() {

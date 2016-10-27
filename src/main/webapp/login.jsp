@@ -9,6 +9,7 @@
     <title>Web Security Scanner</title>
 
     <!-- Bootstrap 3.1.0 -->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link href="css/bootstrap.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
@@ -25,14 +26,6 @@
         </div>
     </div>
 </header>
-<%--<section id="section01">--%>
-    <%--<div class="container">--%>
-        <%--<div class="col-xs-10 col-xs-offset-1 col-lg-4 col-lg-offset-8" if="login_bar">--%>
-            <%--<button class="btn btn-default">Login</button>--%>
-            <%--<button class="btn btn-primary">Sign up</button>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</section>--%>
 <section class="text-center" id="section02">
     <div class="container">
         <article class="col-xs-12 col-xs-offset-0 col-md-8 col-md-offset-2">
